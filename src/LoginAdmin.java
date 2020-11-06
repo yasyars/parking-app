@@ -4,31 +4,38 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.security.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Login extends JFrame implements ActionListener{
+public class LoginAdmin extends JFrame implements ActionListener{
+    private JPanel userLoginPanel;
     private JTextField mailField;
     private JPasswordField passField;
-    private JButton loginButton;
-    private JButton registrasiButton;
-    private JButton backButton;
-    private JPanel userLoginPanel;
-    private JLabel createNewAccount;
     private JLabel unameLabel;
     private JLabel passLabel;
+    private JButton loginButton;
+    private JButton backButton;
+    private JPanel panelloginadmin;
+    private JLabel createNewAccount;
 
-
-    public Login(){
-        add(userLoginPanel);
-        setTitle("Login sebagai pengguna");
+    public LoginAdmin(){
+        add(panelloginadmin);
+        setTitle("Login sebagai Admin");
         setSize(500,500);
+
         loginButton.addActionListener(this);
         backButton.addActionListener(this);
 
+        createNewAccount.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+            }
+        });
         createNewAccount.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -37,11 +44,10 @@ public class Login extends JFrame implements ActionListener{
                 Registrasi reg = new Registrasi();
                 reg.setLocationRelativeTo(null);
                 reg.setVisible(true);
-                reg.setIsAdmin(0);
+                reg.setIsAdmin(1);
             }
         });
     }
-
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == backButton) {
             dispose();
@@ -51,7 +57,7 @@ public class Login extends JFrame implements ActionListener{
         } else { //loginButton
             PreparedStatement ps;
             ResultSet rs;
-            String query = "SELECT * FROM `parking`.`user` WHERE `email`=? AND `password`=? AND `is_admin`=0";
+            String query = "SELECT * FROM `parking`.`user` WHERE `email`=? AND `password`=? AND `is_admin`=1";
 
             try {
                 String mail = mailField.getText();
@@ -63,11 +69,11 @@ public class Login extends JFrame implements ActionListener{
 
                 rs = ps.executeQuery();
                 if (rs.next()) {
-                    MenuUser mu = new MenuUser();
+                    MenuAdminForm ma = new MenuAdminForm();
                     dispose();
-                    mu.setVisible(true);
-                    mu.setMailLabel(mail);
-                    mu.setLocationRelativeTo(null);
+                    ma.setVisible(true);
+                    ma.setLocationRelativeTo(null);
+                    JOptionPane.showMessageDialog(null," Welcome Administrator");
                 } else {
                     JOptionPane.showMessageDialog(null, "Incorrect Username/Password", "Login Failed", 2);
                 }
@@ -77,7 +83,6 @@ public class Login extends JFrame implements ActionListener{
             }
         }
     }
-
     public String md5Spring(String text) {
         String digest = null;
         try {
@@ -96,4 +101,5 @@ public class Login extends JFrame implements ActionListener{
         return digest;
 
     }
+
 }

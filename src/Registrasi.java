@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-public class Registrasi extends JFrame {
+public class Registrasi extends JFrame implements ActionListener{
 
     private JPanel userRegisPanel;
     private JTextField namaTextField;
@@ -23,78 +23,17 @@ public class Registrasi extends JFrame {
     private JLabel validasiMailLabel;
     private JLabel validasiPassLabel;
     private JLabel passLabel2;
-    private String isAdmin;
-
-//    Connection con = null;
-//    Statement stmt = null;
-//    ResultSet rs = null;
+    private JComboBox isAdminCombo;
+    private int isAdmin;
 
     public Registrasi(){
         add(userRegisPanel);
-        setTitle("Registrasi Pengguna Baru");
+        //setTitle("Registrasi Pengguna Baru");
         setSize(500, 500);
 
+        registrasiButton.addActionListener(this);
+        cancelButton.addActionListener(this);
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                Login ul = new Login();
-                ul.setVisible(true);
-            }
-        });
-        registrasiButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PreparedStatement ps;
-                String query = "INSERT INTO `parking`.`user` (`nama`, `alamat`, `email`, `password`, `is_admin`) VALUES (?, ?, ?, ?, ?)";
-
-                char[] pswd = passwordField.getPassword();
-                String input = new String(pswd);
-
-                String passw = md5Spring(input);
-
-                if (namaTextField.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null, "Nama tidak boleh kosong");
-                }
-                else if (alamatTextField.equals("")) {
-                    JOptionPane.showMessageDialog(null, "Alamat tidak boleh kosong");
-                }
-                else if (!isPasswordValid(input)) {
-                    emailTextField.setText("");
-                    passwordField.setText("");
-                    JOptionPane.showMessageDialog(null, "Password tidak valid");
-                }
-                else if (isMailAvailable(emailTextField.getText())) {
-                    emailTextField.setText("");
-                    passwordField.setText("");
-                    JOptionPane.showMessageDialog(null, "E-mail sudah terdaftar");
-                }
-                else if (!isMailValid(emailTextField.getText())) {
-                    emailTextField.setText("");
-                    passwordField.setText("");
-                    JOptionPane.showMessageDialog(null, "E-mail tidak valid");
-
-                } else {
-                    try {
-
-                        ps = DbConnection.getConnection().prepareStatement(query);
-                        ps.setString(1, namaTextField.getText());
-                        ps.setString(2, alamatTextField.getText());
-                        ps.setString(3, emailTextField.getText());
-                        ps.setString(4, passw);
-                        ps.setString(5, getIsAdmin());
-                        ps.executeUpdate();
-                        JOptionPane.showMessageDialog(null, "Register Berhasil!");
-                        dispose();
-                        Login login = new Login();
-                        login.setVisible(true);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, ex);
-                    }
-                }
-            }
-        });
         emailTextField.addKeyListener(new KeyAdapter() {
             @Override
             //validasi e-mail format
@@ -118,8 +57,7 @@ public class Registrasi extends JFrame {
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
 
-                char[] pswd = passwordField.getPassword();
-                String input = new String(pswd);
+                String input = String.valueOf(passwordField.getPassword());
 
                 String upperCaseChars = "(.*[A-Z].*)";
                 String lowerCaseChars = "(.*[a-z].*)";
@@ -136,15 +74,83 @@ public class Registrasi extends JFrame {
         });
     }
 
-    public void setIsAdmin(String isAdmin) {
-        this.isAdmin = isAdmin;
+    public void actionPerformed(ActionEvent e){
+        if (e.getSource() == cancelButton){
+            dispose();
+            Login ul = new Login();
+            ul.setVisible(true);
+            ul.setLocationRelativeTo(null);
+        } else {//registrasiButton
+            PreparedStatement ps;
+            String query = "INSERT INTO `parking`.`user` (`nama`, `alamat`, `email`, `password`, `is_admin`) VALUES (?, ?, ?, ?, ?)";
+            String pass = String.valueOf(passwordField.getPassword());
+            String passEncrypt = md5Spring(pass);
+
+            if (isAnyFieldNull()){
+                JOptionPane.showMessageDialog(null, "Field tidak boleh ada yang kosong");
+            }
+            else if (!isPasswordValid(pass)) {
+                passwordField.setText("");
+                JOptionPane.showMessageDialog(null, "Format Password tidak valid");
+            }
+            else if (isMailUsed(emailTextField.getText())) {
+                emailTextField.setText("");
+                passwordField.setText("");
+                JOptionPane.showMessageDialog(null, "E-mail sudah terdaftar");
+            }
+            else if (!isMailValid(emailTextField.getText())) {
+                emailTextField.setText("");
+                passwordField.setText("");
+                JOptionPane.showMessageDialog(null, "E-mail tidak valid");
+
+            } else {
+                try {
+
+                    ps = DbConnection.getConnection().prepareStatement(query);
+                    ps.setString(1, namaTextField.getText());
+                    ps.setString(2, alamatTextField.getText());
+                    ps.setString(3, emailTextField.getText());
+                    ps.setString(4, passEncrypt);
+                    ps.setString(5, getIsAdmin());
+
+
+                    if (ps.executeUpdate() != 0) {
+                        JOptionPane.showMessageDialog(null, "Registrasi Berhasil!");
+                        dispose();
+                        Init init = new Init();
+                        init.setVisible(true);
+                        init.setLocationRelativeTo(null);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Registrasi Gagal");
+                    }
+
+                } catch (Exception ex) {
+                    //Logger.getLogger(Registrasi.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, ex);
+                }
+            }
+        }
+    }
+
+    public boolean isAnyFieldNull(){
+        if (namaTextField.getText().equals("") || alamatTextField.equals("") ||
+                emailTextField.equals("") || String.valueOf(passwordField.getPassword()).equals("")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setIsAdmin(int isAdmin) {
+        //this.isAdmin = isAdmin;
+        isAdminCombo.setSelectedIndex(isAdmin);
     }
 
     public String getIsAdmin() {
-        return isAdmin;
+        return String.valueOf(isAdminCombo.getSelectedIndex());
     }
 
-    public boolean isMailAvailable(String email){
+    public boolean isMailUsed(String email){
         PreparedStatement ps;
         ResultSet rs;
         boolean mailUsed = false;
@@ -164,6 +170,7 @@ public class Registrasi extends JFrame {
             Logger.getLogger(Registrasi.class.getName()).log(Level.SEVERE, null, sqle);
         }
         return mailUsed;
+
     }
 
     public boolean isMailValid(String email){
@@ -173,36 +180,42 @@ public class Registrasi extends JFrame {
                 "A-Z]{2,7}$";
 
         Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
+//        if (email == null)
+//            return false;
+        //return pat.matcher(email).matches();
+        if (pat.matcher(email).matches()) {
+            return true;
+        } else {
+            passwordField.setText("");
             return false;
-        return pat.matcher(email).matches();
+        }
     }
 
 
     public static boolean isPasswordValid(String password)
     {
         boolean isValid = true;
-        if (password.length() < 6)
-        {
-            //Password must be more than 6 characters in length
-            isValid = false;
-        }
         String upperCaseChars = "(.*[A-Z].*)";
-        if (!password.matches(upperCaseChars ))
-        {
-            //Password must have atleast one uppercase character
-            isValid = false;
-        }
         String lowerCaseChars = "(.*[a-z].*)";
-        if (!password.matches(lowerCaseChars ))
+        String numbers = "(.*[0-9].*)";
+
+        if (password.length() < 6) //Password must be more than 6 characters in length
         {
-            //Password must have atleast one lowercase character"
+            isValid = false;
+            JOptionPane.showMessageDialog(null, "Format Password tidak valid");
+        }
+
+        if (!password.matches(upperCaseChars )) //Password must have atleast one uppercase character
+        {
             isValid = false;
         }
-        String numbers = "(.*[0-9].*)";
-        if (!password.matches(numbers ))
+
+        if (!password.matches(lowerCaseChars )) //Password must have atleast one lowercase character
         {
-            //Password must have atleast one number
+            isValid = false;
+        }
+        if (!password.matches(numbers)) //Password must have atleast one number
+        {
             isValid = false;
         }
 //        String specialChars = "(.*[@,#,$,%].*$)";
@@ -225,9 +238,9 @@ public class Registrasi extends JFrame {
             }
             digest = sb.toString();
         } catch (UnsupportedEncodingException ex) {
-            //Logger.getLogger(StringReplace.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Registrasi.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
-            // Logger.getLogger(StringReplace.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Registrasi.class.getName()).log(Level.SEVERE, null, ex);
         }
         return digest;
 
