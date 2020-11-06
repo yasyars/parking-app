@@ -157,5 +157,15 @@ public class GarageForm extends JFrame implements ActionListener{
                 tampilkan_data();
             }
         });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MenuAdminForm mu = new MenuAdminForm();
+                dispose();
+                mu.setLocationRelativeTo(null);
+                mu.setVisible(true);
+            }
+        });
     }
 }
