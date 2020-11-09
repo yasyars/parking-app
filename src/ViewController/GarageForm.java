@@ -49,6 +49,13 @@ public class GarageForm extends JFrame{
         txtWaktuBuka.setText(null);
         cmbidarea.setEditable(true);
         cmbidarea.setSelectedItem(null);
+        txtTarifMobil.setEditable(true);
+        txtTarifMobil.setText(null);
+        txtTarifMotor.setEditable(true);
+        txtTarifMotor.setText(null);
+        txtWaktuTutup.setEditable(true);
+        txtWaktuTutup.setText(null);
+
     }
     private void tampilkan_data(){
         DAOGarage daoGarage = new DAOGarage();
@@ -165,6 +172,8 @@ public class GarageForm extends JFrame{
                     garage.setTarifMobil(Double.parseDouble(txtTarifMobil.getText()));
                     daoGarage.update(garage);
                     JOptionPane.showMessageDialog(null, "Edit Data Berhasil");
+                    kosongkan_form();
+
                 }catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex);
                 }
@@ -177,6 +186,8 @@ public class GarageForm extends JFrame{
                 try{
                     daoGarage.delete(Integer.parseInt(txtIdGarage.getText()));
                     JOptionPane.showMessageDialog(null, "Delete Data Berhasil");
+                    kosongkan_form();
+
                 }catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex);
                 }
