@@ -68,7 +68,7 @@ public class Login extends JFrame{
 
                     System.out.println(customer.getId());
                 }catch (Exception error){
-                    JOptionPane.showMessageDialog(null, "Incorrect Username/Password");
+                    JOptionPane.showMessageDialog(null,"Incorrect Email/Password", "Login Failed",2);
                 }
             }
         });

@@ -6,11 +6,13 @@ import java.awt.event.ActionListener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import DAO.DAOUser;
 import Helper.DbConnection;
 import Model.Customer;
 import Model.User;
 
-public class UserForm extends JFrame implements ActionListener{
+public class UserForm extends JFrame{
     private JTextField nama;
     private JTextField alamat;
     private JLabel email;
@@ -18,9 +20,12 @@ public class UserForm extends JFrame implements ActionListener{
     private JPanel panelUser;
     private JButton editBtn;
     private JButton backBtn;
-    private Customer user;
+    private Customer user = new Customer();
 
-    public UserForm(String mail) {
+    public UserForm(Customer user) {
+        this.user = user;
+        DAOUser daoUser = new DAOUser();
+
         add(panelUser);
         setTitle("Aplikasi Parking Subcription");
         setSize(500, 500);
@@ -32,9 +37,45 @@ public class UserForm extends JFrame implements ActionListener{
         nama.setBorder(null);
         alamat.setBorder(null);
 
-        showData(mail);
-        backBtn.addActionListener(this);
-        editBtn.addActionListener(this);
+        showData(user);
+
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MenuUser mu = new MenuUser(user);
+                dispose();
+                mu.setVisible(true);
+                mu.setMailLabel(getEmail());
+                mu.setLocationRelativeTo(null);
+                nama.setEditable(false);
+                alamat.setEditable(false);
+            }
+        });
+        editBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (editBtn.getText() == "Edit") {
+                    nama.setEditable(true);
+                    alamat.setEditable(true);
+                    nama.grabFocus();
+                    editBtn.setText("Save");
+                    backBtn.setText("Cancel");
+                }else{
+                    try {
+                        user.setName(getNama());
+                        user.setAddress(getAlamat());
+                        daoUser.update(user);
+                        JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
+                        editBtn.setText("Edit");
+                        backBtn.setText("Back");
+                        nama.setEditable(false);
+                        alamat.setEditable(false);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                }
+            }
+        });
     }
 
     public void setNama(String nama) {
@@ -61,73 +102,14 @@ public class UserForm extends JFrame implements ActionListener{
         return this.alamat.getText();
     }
 
-    public void showData(String mail) {
-        PreparedStatement ps;
-        ResultSet rs;
-        String query = "SELECT * FROM `parking`.`user` WHERE `email`='"+mail+"'";
-
-
-        try {
-            ps = DbConnection.getConnection().prepareStatement(query);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                setNama(rs.getString("nama"));
-                setAlamat(rs.getString("alamat"));
-                setEmail(rs.getString("email"));
-            }
-        } catch (SQLException e){
-            e.printStackTrace();
+    public void showData(User user) {
+        try{
+            setNama(user.getName());
+            setAlamat(user.getAddress());
+            setEmail(user.getEmail());
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"Fail to get user data" + e);
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
-        String lastName = nama.getText();
-        String lastAlamat = alamat.getText();
-        if (e.getSource() == backBtn) {
-            MenuUser mu = new MenuUser(this.user);
-            dispose();
-            mu.setVisible(true);
-            mu.setMailLabel(getEmail());
-            mu.setLocationRelativeTo(null);
-            nama.setEditable(false);
-            alamat.setEditable(false);
-        } else { // if source is editBtn
-            if (editBtn.getText() == "Edit"){
-                nama.setEditable(true);
-                alamat.setEditable(true);
-                nama.grabFocus();
-                editBtn.setText("Save");
-                backBtn.setText("Cancel");
-            } else {// if editBtn == Save
-                try {
-                    PreparedStatement ps;
-                    ResultSet rs;
-                    String query = "UPDATE `parking`.`user` SET `nama`=?, `alamat` =? WHERE `email`='" + getEmail() + "'";
-
-                    ps = DbConnection.getConnection().prepareStatement(query);
-                    ps.setString(1, getNama());
-                    ps.setString(2, getAlamat());
-
-                    ps.executeUpdate();
-                    ps.close();
-
-                    JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
-                    editBtn.setText("Edit");
-                    backBtn.setText("Back");
-                    nama.setEditable(false);
-                    alamat.setEditable(false);
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        }
-    }
-
-//    public void actionPerformed(ActionEvent e) {
-//        nama.setEditable(true);
-//        alamat.setEditable(true);
-//        editBtn.setText("Save");
-//        backBtn.setText("Cancel");
-//    }
 }

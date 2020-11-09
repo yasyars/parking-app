@@ -33,6 +33,7 @@ public class MenuUser extends JFrame implements ActionListener{
        dataDiriButton.addActionListener(this);
        dataKendaraanButton.addActionListener(this);
 
+       this.user = user;
         dataKendaraanButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,7 +70,7 @@ public class MenuUser extends JFrame implements ActionListener{
     }
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == dataDiriButton){
-            UserForm user = new UserForm(mailField.getText());
+            UserForm user = new UserForm(this.user);
             user.setLocationRelativeTo(null);
             dispose();
             user.setVisible(true);

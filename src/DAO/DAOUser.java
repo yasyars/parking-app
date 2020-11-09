@@ -89,7 +89,19 @@ public class DAOUser {
     }
 
     public void update(User user){
+        try {
+            PreparedStatement ps;
+            ps = DbConnection.getConnection().prepareStatement(updateQuery);
+            ps.setString(1, user.getName());
+            ps.setString(2, user.getAddress());
+            ps.setInt(3, user.getId());
 
+            ps.executeUpdate();
+            ps.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
     }
 
     public User login(String email, char[] pass){
@@ -120,7 +132,7 @@ public class DAOUser {
                     System.out.println("Error "+ e);
                 }
             }else{
-                JOptionPane.showMessageDialog(null,"Incorrect Email/Password", "Login Failed",2);
+                System.out.println("Error login");
             }
         }catch(HeadlessException| SQLException e){
             JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
@@ -155,9 +167,4 @@ public class DAOUser {
         }
         return mailUsed;
     }
-
-
-
-
-
 }
