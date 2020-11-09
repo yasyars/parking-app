@@ -71,7 +71,7 @@ public class Registrasi extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                Login ul = new Login();
+                Init ul = new Init();
                 ul.setVisible(true);
                 ul.setLocationRelativeTo(null);
             }

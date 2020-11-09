@@ -1,5 +1,6 @@
 package ViewController;
 
+import Model.Customer;
 import Model.User;
 
 import javax.swing.*;
@@ -18,9 +19,9 @@ public class AreaParkirForm extends JFrame {
     private JButton deleteButton;
     private JPanel PanelAreaParkir;
     private JButton backButton;
-    private User user;
+    private Customer user;
 
-    public AreaParkirForm(User user) {
+    public AreaParkirForm(Customer user) {
         add(PanelAreaParkir);
         setTitle("Login sebagai pengguna");
         setSize(400,250);

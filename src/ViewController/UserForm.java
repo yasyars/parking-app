@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import Helper.DbConnection;
+import Model.Customer;
 import Model.User;
 
 public class UserForm extends JFrame implements ActionListener{
@@ -17,7 +18,7 @@ public class UserForm extends JFrame implements ActionListener{
     private JPanel panelUser;
     private JButton editBtn;
     private JButton backBtn;
-    private User user;
+    private Customer user;
 
     public UserForm(String mail) {
         add(panelUser);

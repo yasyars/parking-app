@@ -22,9 +22,9 @@ public class MenuUser extends JFrame implements ActionListener{
     private JLabel iconLabel;
     private JLabel mailField;
     private Integer idUser;
-    private User user;
+    private Customer user;
 
-    public MenuUser(User user){
+    public MenuUser(Customer user){
        add(mainUserPanel);
        setTitle("Aplikasi Parking Subcription");
        setSize(500,500);
@@ -54,8 +54,9 @@ public class MenuUser extends JFrame implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                RiwayatTransaksiForm rt = new RiwayatTransaksiForm();
+                RiwayatUser rt = new RiwayatUser(user);
                 rt.setVisible(true);
+                rt.setLocationRelativeTo(null);
             }
         });
         dataDiriButton.addActionListener(new ActionListener() {

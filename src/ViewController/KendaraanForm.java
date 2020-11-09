@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.regex.Pattern;
 import Helper.DbConnection;
+import Model.Customer;
 import Model.User;
 
 public class KendaraanForm extends JFrame implements ActionListener{
@@ -25,9 +26,9 @@ public class KendaraanForm extends JFrame implements ActionListener{
     private JButton backButton;
     private JTable tableKendaraan;
     private int idUser;
-    private User user;
+    private Customer user;
 
-    public KendaraanForm(User user) {
+    public KendaraanForm(Customer user) {
         add(panelKendaraan);
         setTitle("Login sebagai pengguna");
         setSize(500, 500);
