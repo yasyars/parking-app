@@ -113,6 +113,7 @@ public class Registrasi extends JFrame{
                                 sub.setVisible(true);
                                 sub.setLocationRelativeTo(null);
                             }else{
+                                daoUser.insert(user);
                                 JOptionPane.showMessageDialog(null, "Registrasi Berhasil!");
                                 dispose();
                                 Init init = new Init();
