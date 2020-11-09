@@ -55,8 +55,8 @@ public class GarageForm extends JFrame{
         txtTarifMotor.setText(null);
         txtWaktuTutup.setEditable(true);
         txtWaktuTutup.setText(null);
-
     }
+
     private void tampilkan_data(){
         DAOGarage daoGarage = new DAOGarage();
         TableModelGarage model = new TableModelGarage(daoGarage.getAll());

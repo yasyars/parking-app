@@ -4,15 +4,13 @@ import Model.User;
 
 import javax.swing.*;
 
-public class SubscriptionForm extends JFrame{
-    private JButton easyButton;
-    private JButton plusButton;
+public class SubscriptionForm extends JFrame {
     private JPanel subPanel;
-    private JButton backButton;
+    private JButton button1;
+    private JButton button2;
+    User user;
 
     public SubscriptionForm(User user){
-        add(subPanel);
-        setTitle("Registrasi Pengguna Baru");
-        setSize(500, 500);
+
     }
 }

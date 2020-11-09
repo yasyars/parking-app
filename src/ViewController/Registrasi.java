@@ -106,10 +106,19 @@ public class Registrasi extends JFrame{
                             user.setEmail(emailTextField.getText());
                             user.setPassword(passEncrypt);
                             user.setAdmin(getIsAdmin());
-                            dispose();
-                            SubscriptionForm sub = new SubscriptionForm(user);
-                            sub.setVisible(true);
-                            sub.setLocationRelativeTo(null);
+
+                            if (user.isAdmin() == 0){
+                                dispose();
+                                SubscriptionForm sub = new SubscriptionForm(user);
+                                sub.setVisible(true);
+                                sub.setLocationRelativeTo(null);
+                            }else{
+                                JOptionPane.showMessageDialog(null, "Registrasi Berhasil!");
+                                dispose();
+                                Init init = new Init();
+                                init.setVisible(true);
+                                init.setLocationRelativeTo(null);
+                            }
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(null, "Gagal input data");
                             JOptionPane.showMessageDialog(null, ex);
