@@ -22,7 +22,7 @@ public class DAOUser {
     Connection CONN = DbConnection.getConnection();
 
     private final String loginQuery = "SELECT * FROM parking.user WHERE email = ? AND password =? AND is_admin=?";
-    private final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin) values (?,?,?,?,?)";
+    private final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin, subscription) values (?,?,?,?,?,?)";
     private final String updateQuery = "UPDATE user SET nama = ?, alamat = ? WHERE id_user = ?";
     private final String getQuery = "SELECT * FROM parking.user WHERE id_user = ?";
     private final static String getUserByEmail = "SELECT * FROM parking.user WHERE email = ?";
@@ -70,12 +70,14 @@ public class DAOUser {
     public void insert(User user){
         PreparedStatement stm = null;
         try {
+            Customer c = (Customer) user;
             stm = CONN.prepareStatement(insertQuery);
-            stm.setString(1, user.getName());
-            stm.setString(2,user.getAddress());
-            stm.setString(3,user.getEmail());
-            stm.setString(4,user.getPassword());
-            stm.setInt(5, user.isAdmin());
+            stm.setString(1, c.getName());
+            stm.setString(2,c.getAddress());
+            stm.setString(3,c.getEmail());
+            stm.setString(4,c.getPassword());
+            stm.setInt(5, c.isAdmin());
+            stm.setString(6, c.getSubscription());
             stm.execute();
         }catch (SQLException e){
             JOptionPane.showMessageDialog(null,"Error input data: " +e);
