@@ -93,12 +93,17 @@ public class DAOUser {
     public void update(User user){
         try {
             PreparedStatement ps;
+            Customer c = (Customer) user;
+
             ps = DbConnection.getConnection().prepareStatement(updateQuery);
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getAddress());
-            ps.setInt(3, user.getId());
+
+            ps.setString(1, c.getName());
+            ps.setString(2, c.getAddress());
+            ps.setInt(3, c.getId());
 
             ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
             ps.close();
 
         } catch (SQLException ex) {
