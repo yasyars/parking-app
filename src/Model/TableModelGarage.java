@@ -60,9 +60,9 @@ public class TableModelGarage extends AbstractTableModel {
             case 5:
                 return listOfGarage.get(rowIndex).getArea();
             case 6:
-                return listOfGarage.get(rowIndex).getTarifMotor();
+                return String.valueOf(listOfGarage.get(rowIndex).getTarifMotor());
             case 7:
-                return listOfGarage.get(rowIndex).getTarifMobil();
+                return String.valueOf(listOfGarage.get(rowIndex).getTarifMobil());
             default:
                 return null;
         }

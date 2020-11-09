@@ -21,18 +21,21 @@ public class DAOArea {
     public DAOArea(){};
 
     public Area getById(int idArea){
-        Area area = null;
+        Area area = new Area();
         PreparedStatement stm = null;
         try{
+
             stm = CONN.prepareStatement(getByIdQuery);
             stm.setInt(1, idArea);
             ResultSet res = stm.executeQuery();
+            res.next();
+
             try{
-                area.setId(res.getInt("id_user"));
-                area.setName(res.getString("nama"));
+                area.setId(res.getInt("id_area"));
+                area.setName(res.getString("nama_area"));
 
             }catch (Exception error){
-                JOptionPane.showMessageDialog(null,"Email atau password salah!");
+                JOptionPane.showMessageDialog(null,"Cannot get area!" + error.getMessage());
             }
         }catch(HeadlessException| SQLException e){
             JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
