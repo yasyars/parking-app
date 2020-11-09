@@ -20,6 +20,7 @@ public class UserForm extends JFrame{
     private JPanel panelUser;
     private JButton editBtn;
     private JButton backBtn;
+    private JComboBox subsCombo;
     private Customer user = new Customer();
 
     public UserForm(Customer user) {
@@ -36,6 +37,7 @@ public class UserForm extends JFrame{
         alamat.setEditable(false);
         nama.setBorder(null);
         alamat.setBorder(null);
+        subsCombo.setEditable(false);
 
         showData(user);
 
@@ -65,7 +67,7 @@ public class UserForm extends JFrame{
                         user.setName(getNama());
                         user.setAddress(getAlamat());
                         daoUser.update(user);
-                        JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
+
                         editBtn.setText("Edit");
                         backBtn.setText("Back");
                         nama.setEditable(false);
@@ -78,6 +80,13 @@ public class UserForm extends JFrame{
         });
     }
 
+    public void setSubsCombo(String subs){
+        this.subsCombo.setSelectedItem(subs);
+    }
+
+    public String getSubsCombo(){
+        return String.valueOf(subsCombo.getSelectedItem());
+    }
     public void setNama(String nama) {
         this.nama.setText(nama);
     }
