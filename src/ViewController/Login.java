@@ -50,7 +50,7 @@ public class Login extends JFrame{
 
                     User user = daoUser.login(mail,passw);
 
-                    User customer = new Customer();
+                    Customer customer = new Customer();
                     customer.setId(user.getId());
                     customer.setName(user.getName());
                     customer.setAddress(user.getAddress());
@@ -83,6 +83,8 @@ public class Login extends JFrame{
             }
         });
     }
+
+
 
 
 }

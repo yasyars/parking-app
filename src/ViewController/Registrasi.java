@@ -7,6 +7,7 @@ import java.awt.event.*;
 
 import DAO.DAOUser;
 import Helper.*;
+import Model.Customer;
 import Model.User;
 
 public class Registrasi extends JFrame{
@@ -22,13 +23,14 @@ public class Registrasi extends JFrame{
     private JLabel validasiPassLabel;
     private JLabel passLabel2;
     private JComboBox isAdminCombo;
-    private int isAdmin;
+    private User user = new User();
 
     public Registrasi(){
         DAOUser daoUser = new DAOUser();
         add(userRegisPanel);
         setTitle("Registrasi Pengguna Baru");
         setSize(500, 500);
+        showSavedDAta();
 
         emailTextField.addKeyListener(new KeyAdapter() {
             @Override
@@ -50,8 +52,6 @@ public class Registrasi extends JFrame{
                 super.keyReleased(e);
 
                 String input = String.valueOf(passwordField.getPassword());
-
-                boolean isValid = User.isPasswordValid(input);
 
                 String upperCaseChars = "(.*[A-Z].*)";
                 String lowerCaseChars = "(.*[a-z].*)";
@@ -108,11 +108,18 @@ public class Registrasi extends JFrame{
                             user.setAdmin(getIsAdmin());
 
                             if (user.isAdmin() == 0){
+                                Customer customer = new Customer();
+                                customer.setName(user.getName());
+                                customer.setAddress(user.getAddress());
+                                customer.setEmail(user.getEmail());
+                                customer.setPassword(passEncrypt);
+                                customer.setAdmin(user.isAdmin());
                                 dispose();
-                                SubscriptionForm sub = new SubscriptionForm(user);
+                                SubscriptionForm sub = new SubscriptionForm(customer);
                                 sub.setVisible(true);
                                 sub.setLocationRelativeTo(null);
                             }else{
+
                                 daoUser.insert(user);
                                 JOptionPane.showMessageDialog(null, "Registrasi Berhasil!");
                                 dispose();
@@ -148,6 +155,20 @@ public class Registrasi extends JFrame{
 
     public void setIsAdmin(int isAdmin) {
         isAdminCombo.setSelectedIndex(isAdmin);
+    }
+    public void setUserData(User user){
+        this.user = user;
+        showSavedDAta();
+    }
+
+    public void showSavedDAta() {
+        try {
+            alamatTextField.setText(this.user.getAddress());
+            emailTextField.setText(this.user.getEmail());
+            namaTextField.setText(this.user.getName());
+        } catch (Exception e) {
+
+        }
     }
 
 }
