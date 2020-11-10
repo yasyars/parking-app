@@ -1,9 +1,8 @@
 package ViewController;
 
+import DAO.DAOArea;
 import DAO.DAOKendaraan;
-import Model.Customer;
-import Model.Kendaraan;
-import Model.TableModelKendaraan;
+import Model.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -36,17 +35,9 @@ public class KendaraanForm extends JFrame {
         this.idUser = id_user;
     }
 
-
-    public void kosongkan_form(){
-        platNoField.setEditable(true);
-        platNoField.setText(null);
-        jenisKendaraanCombo.setEditable(true);
-        jenisKendaraanCombo.setSelectedItem(null);
-    }
-
-    public void tampilkan_data(){
-        DAOKendaraan daoKendaraan = new DAOKendaraan();
-        TableModelKendaraan model = new TableModelKendaraan(daoKendaraan.getAll());
+    public void tampilkan_data() {
+        DAOKendaraan daokendaraan = new DAOKendaraan();
+        TableModelKendaraan model = new TableModelKendaraan(daokendaraan.getAll());
         tableKendaraan.setModel(model);
     }
 
@@ -54,45 +45,12 @@ public class KendaraanForm extends JFrame {
     public KendaraanForm(Customer user){
         DAOKendaraan daoKendaraan = new DAOKendaraan();
         tampilkan_data();
-        kosongkan_form();
 
         add(panelKendaraan);
         setTitle("Aplikasi Parking Subcription");
         setSize(500,500);
         setLocationRelativeTo(null);
 
-//        System.out.println("Debug ")
-
-        tableKendaraan.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                int baris = tableKendaraan.rowAtPoint(e.getPoint());
-                String plat_no = tableKendaraan.getValueAt(baris, 0).toString();
-                platNoField.setText(plat_no);
-                String jenis_kendaraan = tableKendaraan.getValueAt(baris, 1).toString();
-                jenisKendaraanCombo.setSelectedItem(jenis_kendaraan);
-
-            }
-        });
-
-        insertButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Kendaraan kendaraan = new Kendaraan();
-                try{
-                    kendaraan.setNoPlat(platNoField.getText());
-                    kendaraan.setTipe(jenisKendaraanCombo.getSelectedItem().toString());
-                    daoKendaraan.insert(kendaraan);
-                    JOptionPane.showMessageDialog(null,"Data berhasil disimpan");
-                    kosongkan_form();
-
-                }catch (Exception error){
-                    JOptionPane.showMessageDialog(null, error.getMessage());
-                }
-                tampilkan_data();
-            }
-        });
 
 
         backButton.addActionListener(new ActionListener() {
@@ -101,6 +59,26 @@ public class KendaraanForm extends JFrame {
                 dispose();
                 MenuUser mu = new MenuUser(user);
                 //         mu.setVisible(true);
+            }
+        });
+        insertButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    Kendaraan kendaraan = new Kendaraan();
+                    kendaraan.setNoPlat(platNoField.getText());
+                    kendaraan.setTipe(jenisKendaraanCombo.getSelectedItem().toString());
+
+                    daoKendaraan.insert(kendaraan);
+                    JOptionPane.showMessageDialog(null, "Data Berhasil disimpan");
+
+                    tampilkan_data();
+
+                }catch (Exception error){
+                    JOptionPane.showMessageDialog(null, error.getMessage());
+                }
+
+
             }
         });
     }
