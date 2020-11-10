@@ -22,7 +22,7 @@ public class DAOUser {
     Connection CONN = DbConnection.getConnection();
 
     private final String loginQuery = "SELECT * FROM parking.user WHERE email = ? AND password =? AND is_admin=?";
-    private final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin) values (?,?,?,?,?)";
+    private final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin, subscription) values (?,?,?,?,?,?)";
     private final String updateQuery = "UPDATE user SET nama = ?, alamat = ? WHERE id_user = ?";
     private final String getQuery = "SELECT * FROM parking.user WHERE id_user = ?";
     private final static String getUserByEmail = "SELECT * FROM parking.user WHERE email = ?";
@@ -76,6 +76,10 @@ public class DAOUser {
             stm.setString(3,user.getEmail());
             stm.setString(4,user.getPassword());
             stm.setInt(5, user.isAdmin());
+
+            if (user.isAdmin()==0){
+                stm.setString(6,((Customer)user).getSubscription());
+            }
             stm.execute();
         }catch (SQLException e){
             JOptionPane.showMessageDialog(null,"Error input data: " +e);

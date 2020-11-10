@@ -32,6 +32,7 @@ public class KendaraanForm extends JFrame implements ActionListener{
         add(panelKendaraan);
         setTitle("Login sebagai pengguna");
         setSize(500, 500);
+        setLocationRelativeTo(null);
         insertButton.addActionListener(this);
 
 
@@ -40,7 +41,8 @@ public class KendaraanForm extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 MenuUser mu = new MenuUser(user);
-       //         mu.setVisible(true);
+                mu.setVisible(true);
+                mu.setLocationRelativeTo(null);
             }
             });
     }
