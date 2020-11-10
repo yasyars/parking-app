@@ -6,9 +6,6 @@ import ViewController.Login;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,6 +67,7 @@ public class DAOUser {
     public void insert(User user){
         PreparedStatement stm = null;
         try {
+            Customer c = (Customer) user;
             stm = CONN.prepareStatement(insertQuery);
             stm.setString(1, user.getName());
             stm.setString(2,user.getAddress());
@@ -95,12 +93,17 @@ public class DAOUser {
     public void update(User user){
         try {
             PreparedStatement ps;
+            Customer c = (Customer) user;
+
             ps = DbConnection.getConnection().prepareStatement(updateQuery);
-            ps.setString(1, user.getName());
-            ps.setString(2, user.getAddress());
-            ps.setInt(3, user.getId());
+
+            ps.setString(1, c.getName());
+            ps.setString(2, c.getAddress());
+            ps.setInt(3, c.getId());
 
             ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
             ps.close();
 
         } catch (SQLException ex) {
