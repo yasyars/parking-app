@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import Helper.DbConnection;
 import Model.*;
 
-public class MenuUser extends JFrame implements ActionListener{
+public class MenuUser extends JFrame{
     private JButton homeButton;
     private JButton dataDiriButton;
     private JButton dataKendaraanButton;
@@ -25,15 +25,23 @@ public class MenuUser extends JFrame implements ActionListener{
     private Customer user;
 
     public MenuUser(Customer user){
+        this.user = user;
        add(mainUserPanel);
        setTitle("Aplikasi Parking Subcription");
        setSize(500,500);
        iconLabel.setHorizontalTextPosition(JLabel.CENTER);
        iconLabel.setVerticalTextPosition(JLabel.TOP);
-       dataDiriButton.addActionListener(this);
-       dataKendaraanButton.addActionListener(this);
 
-       this.user = user;
+       dataDiriButton.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               dispose();
+               UserForm uf = new UserForm(user);
+               uf.setLocationRelativeTo(null);
+               uf.setVisible(true);
+           }
+       });
+
         dataKendaraanButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,23 +76,7 @@ public class MenuUser extends JFrame implements ActionListener{
             }
         });
     }
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == dataDiriButton){
-            UserForm user = new UserForm(this.user);
-            user.setLocationRelativeTo(null);
-            dispose();
-            user.setVisible(true);
-        } else if (e.getSource() == dataKendaraanButton) {
-            if (getIdUser() != null) {
-                KendaraanForm kf = new KendaraanForm(this.user);
-                kf.setIdUser(getIdUser());
-                kf.setLocationRelativeTo(null);
-                dispose();
-                kf.setVisible(true);
-            }
-        }
 
-    }
     public void setMailLabel(String mail) {
         this.mailField.setText(mail);
     }

@@ -1,41 +1,29 @@
 package DAO;
 
-import Helper.DbConnection;
-import Model.*;
-import ViewController.Login;
-
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import Helper.DbConnection;
+import Model.*;
+
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
-public class DAOUser {
-    Connection CONN = DbConnection.getConnection();
 
-    protected final String loginQuery = "SELECT * FROM parking.user WHERE email = ? AND password =? AND is_admin=?";
-    protected final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin) values (?,?,?,?,?)";
-    protected final String updateQuery = "UPDATE user SET nama = ?, alamat = ? WHERE id_user = ?";
-    protected final String getQuery = "SELECT * FROM parking.user WHERE id_user = ?";
-    protected final static String getUserByEmail = "SELECT * FROM parking.user WHERE email = ?";
-    protected int isAdmin;
+public class DAOCustomer extends DAOUser{
 
-    public DAOUser(){}
+    private final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin, subscription) values (?,?,?,?,?,?)";
 
-    public void setIsAdmin(int admin){
-        this.isAdmin = admin;
-    }
-    public int getIsAdmin(){
-        return isAdmin;
-    }
 
-    public User get(int id){
-        User user = null;
+    public DAOCustomer(){};
+
+    @Override
+    public Customer get(int id){
+        Customer user = new Customer();
         PreparedStatement stm = null;
         try{
             stm = CONN.prepareStatement(getQuery);
@@ -48,11 +36,12 @@ public class DAOUser {
                 user.setEmail(res.getString("email"));
                 user.setPassword(res.getString("password"));
                 user.setAdmin(res.getInt("is_admin"));
+                user.setSubscription(res.getString("subscription"));
 
             }catch (Exception error){
                 JOptionPane.showMessageDialog(null,"Email atau password salah!");
             }
-        }catch(HeadlessException| SQLException e){
+        }catch(HeadlessException | SQLException e){
             JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
         }finally{
             try{
@@ -64,16 +53,17 @@ public class DAOUser {
         return user;
     }
 
-    public void insert(User user){
+    public void insert(Customer user){
         PreparedStatement stm = null;
         try {
             Customer c = (Customer) user;
-            stm = CONN.prepareStatement(insertQuery);
+            stm = CONN.prepareStatement(this.insertQuery);
             stm.setString(1, user.getName());
             stm.setString(2,user.getAddress());
             stm.setString(3,user.getEmail());
             stm.setString(4,user.getPassword());
             stm.setInt(5, user.isAdmin());
+            stm.setString(6,(user.getSubscription()));
             stm.execute();
         }catch (SQLException e){
             JOptionPane.showMessageDialog(null,"Error input data: " +e);
@@ -86,12 +76,31 @@ public class DAOUser {
         }
     }
 
+    public void update(Customer c){
+        try {
+            PreparedStatement ps;
 
-    public User login(String email, char[] pass){
+            ps = DbConnection.getConnection().prepareStatement(updateQuery);
+
+            ps.setString(1, c.getName());
+            ps.setString(2, c.getAddress());
+            ps.setInt(3, c.getId());
+
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
+            ps.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
+
+    public Customer login(String email, char[] pass){
 
         String password = User.md5Spring(String.valueOf(pass));
 
-        User user = new User();
+        Customer user = new Customer();
         PreparedStatement stm = null;
         ResultSet res;
 
@@ -111,6 +120,7 @@ public class DAOUser {
                     user.setEmail(res.getString("email"));
                     user.setPassword(res.getString("password"));
                     user.setAdmin(res.getInt("is_admin"));
+                    user.setSubscription(res.getString("subscription"));
                 }catch (Exception e){
                     System.out.println("Error "+ e);
                 }
@@ -127,27 +137,10 @@ public class DAOUser {
             }
         }
         System.out.println("Debug : " +
-        user.getId() + user.getPassword());
+                user.getId() + user.getPassword());
         return user;
     }
 
-    public static boolean isEmailUsed(String email){
-        PreparedStatement ps;
-        ResultSet rs;
-        boolean mailUsed = false;
 
-        try{
-            ps = DbConnection.getConnection().prepareStatement(getUserByEmail);
-            ps.setString(1, email);
-            rs = ps.executeQuery();
 
-            if (rs.next()){
-                mailUsed = true;
-            }
-
-        } catch (SQLException sqle){
-            Logger.getLogger(DAOUser.class.getName()).log(Level.SEVERE, null, sqle);
-        }
-        return mailUsed;
-    }
 }

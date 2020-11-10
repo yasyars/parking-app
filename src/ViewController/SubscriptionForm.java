@@ -1,5 +1,6 @@
 package ViewController;
 
+import DAO.DAOCustomer;
 import DAO.DAOUser;
 import Model.Customer;
 import Model.User;
@@ -18,7 +19,7 @@ public class SubscriptionForm extends JFrame {
 
     public SubscriptionForm(Customer user){
 
-        DAOUser daoUser = new DAOUser();
+        DAOCustomer daoUser = new DAOCustomer();
         add(subPanel);
         setTitle("Subcription");
         setSize(500,300);
@@ -39,7 +40,7 @@ public class SubscriptionForm extends JFrame {
         easyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setSubscription("easy");
+                user.setSubscription("Easy");
                 daoUser.insert(user);
                 JOptionPane.showMessageDialog(null, "Pilihan Subscription: Easy \nRegistrasi Berhasil!");
                 dispose();
@@ -52,7 +53,7 @@ public class SubscriptionForm extends JFrame {
         plusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setSubscription("plus");
+                user.setSubscription("Plus");
                 daoUser.insert(user);
                 JOptionPane.showMessageDialog(null, "Pilihan Subscription: Plus\nRegistrasi Berhasil!");
                 dispose();

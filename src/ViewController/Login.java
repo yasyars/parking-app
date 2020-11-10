@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import DAO.DAOCustomer;
 import DAO.DAOUser;
 import Model.Customer;
 import Model.User;
@@ -23,7 +24,7 @@ public class Login extends JFrame{
 
 
     public Login(){
-        DAOUser daoUser = new DAOUser();
+        DAOCustomer daoUser = new DAOCustomer();
         daoUser.setIsAdmin(0);
         add(userLoginPanel);
         setTitle("Login sebagai pengguna");
@@ -48,7 +49,7 @@ public class Login extends JFrame{
                     String mail = mailField.getText();
                     char[] passw = passField.getPassword();
 
-                    User user = daoUser.login(mail,passw);
+                    Customer user = daoUser.login(mail,passw);
 
                     Customer customer = new Customer();
                     customer.setId(user.getId());
@@ -57,6 +58,7 @@ public class Login extends JFrame{
                     customer.setEmail(user.getEmail());
                     customer.setPassword(user.getPassword());
                     customer.setAdmin(user.isAdmin());
+                    customer.setSubscription(user.getSubscription());
 
                     if (customer.getId()!= 0){
                         MenuUser mu = new MenuUser(customer);

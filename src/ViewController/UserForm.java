@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import DAO.DAOCustomer;
 import DAO.DAOUser;
 import Helper.DbConnection;
 import Model.Customer;
@@ -20,12 +21,12 @@ public class UserForm extends JFrame{
     private JPanel panelUser;
     private JButton editBtn;
     private JButton backBtn;
-    private JComboBox subsCombo;
+    private JLabel subLabel;
     private Customer user = new Customer();
 
     public UserForm(Customer user) {
         this.user = user;
-        DAOUser daoUser = new DAOUser();
+        DAOCustomer daoUser = new DAOCustomer();
 
         add(panelUser);
         setTitle("Aplikasi Parking Subcription");
@@ -37,7 +38,6 @@ public class UserForm extends JFrame{
         alamat.setEditable(false);
         nama.setBorder(null);
         alamat.setBorder(null);
-        subsCombo.setEditable(false);
 
         showData(user);
 
@@ -80,13 +80,10 @@ public class UserForm extends JFrame{
         });
     }
 
-    public void setSubsCombo(String subs){
-        this.subsCombo.setSelectedItem(subs);
+    public void setSubsLabel(){
+        this.subLabel.setText(this.user.getSubscription());
     }
 
-    public String getSubsCombo(){
-        return String.valueOf(subsCombo.getSelectedItem());
-    }
     public void setNama(String nama) {
         this.nama.setText(nama);
     }
@@ -111,11 +108,13 @@ public class UserForm extends JFrame{
         return this.alamat.getText();
     }
 
-    public void showData(User user) {
+    public void showData(Customer user) {
         try{
             setNama(user.getName());
             setAlamat(user.getAddress());
             setEmail(user.getEmail());
+            System.out.println("Debug : " + user.getSubscription());
+            setSubsLabel();
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to get user data" + e);
         }
