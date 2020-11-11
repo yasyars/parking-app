@@ -83,24 +83,31 @@ public class Registrasi extends JFrame{
                 String pass = String.valueOf(passwordField.getPassword());
 
                 if (!User.isPasswordValid(pass)){
-                    JOptionPane.showMessageDialog(null, "Password tidak valid!");
+                    JOptionPane.showMessageDialog(null, "Format password tidak valid!");
+                    passwordField.setText("");
                 }else if (isAnyFieldNull()) {
                     JOptionPane.showMessageDialog(null, "Field tidak boleh kosong!");
-
+                } else if (!User.isEmailValid(emailTextField.getText())) {
+                    JOptionPane.showMessageDialog(null, "Email tidak valid!");
+                    emailTextField.setText("");
+                } else if (DAOUser.isEmailUsed(emailTextField.getText())){
+                    JOptionPane.showMessageDialog(null, "Email sudah terdaftar!");
+                    emailTextField.setText("");
+                    passwordField.setText("");
                 }else{
                         String passEncrypt = User.md5Spring(pass);
                         User user = new User();
                         try {
-                            if (Validasi.isEmpty(emailTextField.getText())){
-                                throw new Exception("Alamat email tidak boleh kosong!");
-                            }
-                            if (!User.isEmailValid(emailTextField.getText())){
-                                throw new Exception("Email tidak valid");
-                            }
-
-                            if (DAOUser.isEmailUsed(emailTextField.getText())){
-                                throw new Exception ("Email sudah terdaftar");
-                            }
+//                            if (Validasi.isEmpty(emailTextField.getText())){
+//                                throw new Exception("Alamat email tidak boleh kosong!");
+//                            } // sdh masuk di isAnyFieldnull
+//                            if (!User.isEmailValid(emailTextField.getText())){
+//                                throw new Exception("Email tidak valid");
+//                            }
+//
+//                            if (DAOUser.isEmailUsed(emailTextField.getText())){
+//                                throw new Exception ("Email sudah terdaftar");
+//                            }
                             user.setName(namaTextField.getText());
                             user.setAddress(alamatTextField.getText());
                             user.setEmail(emailTextField.getText());
@@ -119,7 +126,6 @@ public class Registrasi extends JFrame{
                                 sub.setVisible(true);
                                 sub.setLocationRelativeTo(null);
                             }else{
-
                                 daoUser.insert(user);
                                 JOptionPane.showMessageDialog(null, "Registrasi Berhasil!");
                                 dispose();
