@@ -50,8 +50,8 @@ public class Kendaraan {
     }
 
     public boolean isPlatNoValid(String plat_no, String tipe){
-        String mobilRegex = "^[A-Z]{2}[0-9]{4}[A-Z]{1}$";
-        String motorRegex = "^[A-Z]{2}[0-9]{3}[A-Z]{2}$";
+        String mobilRegex = "^[A-Z]{2}\\s[0-9]{4}\\s[A-Z]{1}$";
+        String motorRegex = "^[A-Z]{2}\\s[0-9]{3}\\s[A-Z]{2}$";
 
         if (tipe.equals("Mobil")){
             Pattern p = Pattern.compile(mobilRegex);

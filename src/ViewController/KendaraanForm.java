@@ -63,7 +63,7 @@ public class KendaraanForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Kendaraan kendaraan = new Kendaraan();
 
-                String plat_no = platNoField.getText().replaceAll("\\s", "").toUpperCase();
+                String plat_no = platNoField.getText().toUpperCase();
                 try {
                     kendaraan.setOwner(user);
                     kendaraan.setTipe(String.valueOf(jenisKendaraanCombo.getSelectedItem()));
