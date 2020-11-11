@@ -69,44 +69,37 @@ public class MenuUser extends JFrame{
                 rt.setLocationRelativeTo(null);
             }
         });
-        dataDiriButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
-            }
-        });
     }
 
     public void setMailLabel(String mail) {
         this.mailField.setText(mail);
     }
 
-    public Integer getIdUser() {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        String query = "SELECT * FROM `parking`.`user` WHERE `email`=?";
-        try {
-            conn = DbConnection.getConnection();
-            ps = conn.prepareStatement(query);
-            ps.setString(1, mailField.getText());
-
-            rs = ps.executeQuery();
-
-            while (rs.next()){
-                idUser = rs.getInt(1);
-            }
-            return idUser;
-        } catch (SQLException sqle){
-            Logger.getLogger(MenuUser.class.getName()).log(Level.SEVERE, null, sqle);
-            return null;
-        } finally {
-            try { rs.close(); } catch (Exception e) { /* ignored */ }
-            try { ps.close(); } catch (Exception e) { /* ignored */ }
-            try { conn.close(); } catch (Exception e) { /* ignored */ }
-        }
-    }
+//    public Integer getIdUser() {
+//        Connection conn = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs = null;
+//
+//        String query = "SELECT * FROM `parking`.`user` WHERE `email`=?";
+//        try {
+//            conn = DbConnection.getConnection();
+//            ps = conn.prepareStatement(query);
+//            ps.setString(1, mailField.getText());
+//
+//            rs = ps.executeQuery();
+//
+//            while (rs.next()){
+//                idUser = rs.getInt(1);
+//            }
+//            return idUser;
+//        } catch (SQLException sqle){
+//            Logger.getLogger(MenuUser.class.getName()).log(Level.SEVERE, null, sqle);
+//            return null;
+//        } finally {
+//            try { rs.close(); } catch (Exception e) { /* ignored */ }
+//            try { ps.close(); } catch (Exception e) { /* ignored */ }
+//            try { conn.close(); } catch (Exception e) { /* ignored */ }
+//        }
+//    }
 
 }

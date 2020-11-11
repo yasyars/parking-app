@@ -34,13 +34,14 @@ public class DAOUser {
         return isAdmin;
     }
 
-    public User get(int id){
+    public User get(int id) throws Exception{
         User user = null;
         PreparedStatement stm = null;
+        ResultSet res = null;
         try{
             stm = CONN.prepareStatement(getQuery);
             stm.setInt(1, id);
-            ResultSet res = stm.executeQuery();
+            res = stm.executeQuery();
             try{
                 user.setId(res.getInt("id_user"));
                 user.setName(res.getString("nama"));
@@ -50,21 +51,21 @@ public class DAOUser {
                 user.setAdmin(res.getInt("is_admin"));
 
             }catch (Exception error){
-                JOptionPane.showMessageDialog(null,"Email atau password salah!");
+               //JOptionPane.showMessageDialog(null,"Email atau password salah!");
             }
         }catch(HeadlessException| SQLException e){
-            JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+            throw new Exception("Error : " + e.getMessage());
         }finally{
-            try{
-                stm.close();
-            }catch(SQLException sqle){
-                System.out.println("Error : "+sqle.getMessage());
-            }
+            try { res.close(); } catch (Exception ex) { /* ignored */ }
+            try { stm.close(); } catch (Exception ex) { /* ignored */ }
+            try { CONN.close(); } catch (Exception ex) { /* ignored */ }
+
         }
         return user;
     }
 
-    public void insert(User user){
+    public void insert(User user) throws Exception{
         PreparedStatement stm = null;
         try {
             Customer c = (Customer) user;
@@ -76,7 +77,8 @@ public class DAOUser {
             stm.setInt(5, user.isAdmin());
             stm.execute();
         }catch (SQLException e){
-            JOptionPane.showMessageDialog(null,"Error input data: " +e);
+            //JOptionPane.showMessageDialog(null,"Error input data: " +e);
+			throw new Exception("Error : " + e.getMessage());
         }finally {
             try{
                 stm.close();
@@ -87,7 +89,7 @@ public class DAOUser {
     }
 
 
-    public User login(String email, char[] pass){
+    public User login(String email, char[] pass) throws Exception{
 
         String password = User.md5Spring(String.valueOf(pass));
 
@@ -102,7 +104,7 @@ public class DAOUser {
             stm.setInt(3, this.isAdmin);
 
             res = stm.executeQuery();
-            System.out.println("Debug : " +stm);
+            //System.out.println("Debug : " +stm);
             if (res.next()){
                 try{
                     user.setId(res.getInt("id_user"));
@@ -112,22 +114,23 @@ public class DAOUser {
                     user.setPassword(res.getString("password"));
                     user.setAdmin(res.getInt("is_admin"));
                 }catch (Exception e){
-                    System.out.println("Error "+ e);
+                    //System.out.println("Error "+ e);
                 }
             }else{
                 System.out.println("Error login");
             }
         }catch(HeadlessException| SQLException e){
-            JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+			throw new Exception("Error : " + e.getMessage());
+            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
         }finally{
             try{
                 stm.close();
             }catch(SQLException sqle){
-                System.out.println("Error : "+sqle.getMessage());
+                //System.out.println("Error : "+sqle.getMessage());
             }
         }
-        System.out.println("Debug : " +
-        user.getId() + user.getPassword());
+//        System.out.println("Debug : " +
+//        user.getId() + user.getPassword());
         return user;
     }
 
@@ -150,4 +153,5 @@ public class DAOUser {
         }
         return mailUsed;
     }
+
 }

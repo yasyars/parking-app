@@ -40,9 +40,13 @@ public class SubscriptionForm extends JFrame {
         easyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setSubscription("Easy");
-                daoUser.insert(user);
-                JOptionPane.showMessageDialog(null, "Pilihan Subscription: Easy \nRegistrasi Berhasil!");
+                user.setSubscription("easy");
+                try{
+                    daoUser.insert(user);
+                    JOptionPane.showMessageDialog(null, "Pilihan Subscription: Easy \nRegistrasi Berhasil!");
+                } catch (Exception error) {
+                    JOptionPane.showMessageDialog(null, error.getMessage());
+                }
                 dispose();
                 Login login = new Login();
                 login.setVisible(true);
@@ -53,9 +57,13 @@ public class SubscriptionForm extends JFrame {
         plusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setSubscription("Plus");
-                daoUser.insert(user);
-                JOptionPane.showMessageDialog(null, "Pilihan Subscription: Plus\nRegistrasi Berhasil!");
+                user.setSubscription("plus");
+                try {
+                    daoUser.insert(user);
+                    JOptionPane.showMessageDialog(null, "Pilihan Subscription: Plus\nRegistrasi Berhasil!");
+                } catch (Exception error) {
+                    JOptionPane.showMessageDialog(null, error.getMessage());
+                }
                 dispose();
                 Login login = new Login();
                 login.setVisible(true);
