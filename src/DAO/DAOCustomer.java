@@ -22,7 +22,7 @@ public class DAOCustomer extends DAOUser{
     public DAOCustomer(){};
 
     @Override
-    public Customer get(int id){
+    public Customer get(int id) throws Exception{
         Customer user = new Customer();
         PreparedStatement stm = null;
         try{
@@ -39,10 +39,12 @@ public class DAOCustomer extends DAOUser{
                 user.setSubscription(res.getString("subscription"));
 
             }catch (Exception error){
-                JOptionPane.showMessageDialog(null,"Email atau password salah!");
+                //JOptionPane.showMessageDialog(null,"Email atau password salah!");
+                throw new Exception("Error : " + error.getMessage());
             }
         }catch(HeadlessException | SQLException e){
-            JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+            throw new Exception("Error : " + e.getMessage());
         }finally{
             try{
                 stm.close();
@@ -53,7 +55,7 @@ public class DAOCustomer extends DAOUser{
         return user;
     }
 
-    public void insert(Customer user){
+    public void insert(Customer user) throws Exception{
         PreparedStatement stm = null;
         try {
             Customer c = (Customer) user;
@@ -66,17 +68,19 @@ public class DAOCustomer extends DAOUser{
             stm.setString(6,(user.getSubscription()));
             stm.execute();
         }catch (SQLException e){
-            JOptionPane.showMessageDialog(null,"Error input data: " +e);
+            //JOptionPane.showMessageDialog(null,"Error input data: " +e);
+			throw new Exception("Error : " + e.getMessage());
         }finally {
             try{
                 stm.close();
             }catch(SQLException e){
                 System.out.println("Error : " + e.getMessage());
+
             }
         }
     }
 
-    public void update(Customer c){
+    public void update(Customer c) throws Exception{
         try {
             PreparedStatement ps;
 
@@ -88,15 +92,16 @@ public class DAOCustomer extends DAOUser{
 
             ps.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
+            //JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
             ps.close();
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            //JOptionPane.showMessageDialog(null, ex.getMessage());
+			throw new Exception("Error : " + ex.getMessage());
         }
     }
 
-    public Customer login(String email, char[] pass){
+    public Customer login(String email, char[] pass) throws Exception{
 
         String password = User.md5Spring(String.valueOf(pass));
 
@@ -128,16 +133,17 @@ public class DAOCustomer extends DAOUser{
                 System.out.println("Error login");
             }
         }catch(HeadlessException| SQLException e){
-            JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+			throw new Exception("Error : " + e.getMessage());
         }finally{
             try{
                 stm.close();
             }catch(SQLException sqle){
-                System.out.println("Error : "+sqle.getMessage());
+                //System.out.println("Error : "+sqle.getMessage());
             }
         }
-        System.out.println("Debug : " +
-                user.getId() + user.getPassword());
+//        System.out.println("Debug : " +
+//                user.getId() + user.getPassword());
         return user;
     }
 
