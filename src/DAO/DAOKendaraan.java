@@ -18,6 +18,8 @@ public class DAOKendaraan {
     protected final String readQuery = "SELECT * FROM kendaraan";
     protected final String deleteQuery = "DELETE FROM kendaraan WHERE plat_no = ?";
     protected static final String getPlatInTransc = "SELECT * FROM transaksi_parkir WHERE plat_no = ?";
+    protected final String getByUser = "SELECT * FROM kendaraan WHERE id_user=?";
+    protected final String getUnparked = "SELECT * FROM kendaraan WHERE id_user = ? AND is_parked=0";
 
     public DAOKendaraan() {
     }
@@ -93,7 +95,7 @@ public class DAOKendaraan {
     }
 
     public static boolean isInTransaction(String plat_no) {
-        PreparedStatement ps= null;
+        PreparedStatement ps = null;
         ResultSet rs = null;
         Connection conn = null;
         boolean in = false;
@@ -112,35 +114,79 @@ public class DAOKendaraan {
         }
         return in;
     }
-}
 
-//    public List<Kendaraan> getByUser(Customer user){
-//        List<Kendaraan> lg = new ArrayList<>();
-//        try{
-//            Statement stm = CONN.createStatement();
-//            ResultSet res = stm.executeQuery(readQuery);
+    public List<Kendaraan> getUnparkedKendaraanByUser(Customer user) {
+        List<Kendaraan> lg = new ArrayList<>();
+        PreparedStatement stm = null;
+
+        try {
+            stm = CONN.prepareStatement(getUnparked);
+            stm.setInt(1, user.getId());
+
+            ResultSet res = stm.executeQuery();
+            System.out.println("Debug stm: "+ stm);
+
+            while (res.next()) {
+                Kendaraan kendaraan = new Kendaraan();
+
+
+                System.out.println(kendaraan.getNoPlat());
+                kendaraan.setTipe(res.getString("tipe_kendaraan"));
+                kendaraan.setIsParked(res.getInt("is_parked"));
+                kendaraan.setOwner(user);
+                try{
+                    kendaraan.setNoPlat(res.getString("plat_no"));
+                }catch(Exception e){
+                    System.out.println("setPlat" + e);
+                }
+
+                try {
+//                    System.out.println("Debug: "+ res.getString("plat_no"));
 //
-//            while (res.next()){
-//                Garage garage = new Garage();
-//                garage.setId(res.getInt(1));
-//                try{
-//                    garage.setName(res.getString(2));
-//                    OperationalTime time = new OperationalTime();
-//                    time.setDay(res.getString("hari_operasional"));
-//                    time.setOpenHour(res.getString("waktu_buka"));
-//                    time.setCloseHour(res.getString("waktu_tutup"));
-//                    garage.setOperationalTime(time);
-//                    garage.setArea(Integer.parseInt(res.getString("id_area")));
-//                    garage.setTarifMotor(res.getDouble("tarif_motor"));
-//                    garage.setTarifMobil(res.getDouble("tarif_mobil"));
-//                }catch (Exception error){
-//                    System.out.println("Error : " +error.getMessage());
-//                }
-//                lg.add(garage);
-//            }
-//        }catch (SQLException e){
-//            System.out.println("Error : " +e.getMessage());
-//        }
-//
-//        return lg;
-//    }
+//                    kendaraan.setNoPlat(res.getString("plat_no"));
+//                    System.out.println(kendaraan.getNoPlat());
+//                    kendaraan.setTipe(res.getString("tipe_kendaraan"));
+//                    kendaraan.setIsParked(res.getInt("is_parked"));
+//                    kendaraan.setOwner(user);
+                    lg.add(kendaraan);
+                } catch (Exception error) {
+                    System.out.println("Error : " + error.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error : " + e.getMessage());
+        }
+
+        return lg;
+    }
+
+    public List<Kendaraan> getByUser(Customer user) throws Exception {
+        List<Kendaraan> lg = new ArrayList<>();
+        PreparedStatement stm = null;
+
+        try {
+            stm = CONN.prepareStatement(getByUser);
+            stm.setInt(1, user.getId());
+            stm.execute();
+            ResultSet res = stm.executeQuery();
+
+            while (res.next()) {
+                Kendaraan kendaraan = new Kendaraan();
+                try {
+                    kendaraan.setNoPlat(res.getString("plat_no"));
+                    kendaraan.setTipe(res.getString("tipe_kendaraan"));
+                    kendaraan.setIsParked(res.getInt("is_parked"));
+                    kendaraan.setOwner(user);
+                    lg.add(kendaraan);
+                } catch (Exception error) {
+                    System.out.println("Error : " + error.getMessage());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error : " + e.getMessage());
+        }
+
+        return lg;
+    }
+
+}

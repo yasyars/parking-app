@@ -20,6 +20,7 @@ public class Kendaraan {
         if (isPlatNoValid(plat_no, getTipe())){
             this.noPlat = plat_no;
         }else{
+            System.out.println("Nomor tidak valid");
             throw new Exception("Nomor plat tidak valid");
         }
     }
@@ -61,6 +62,10 @@ public class Kendaraan {
         } else {
             return false;
         }
+    }
+
+    public String toString() {
+        return this.getTipe() + " - " + this.getNoPlat();
     }
 
 
