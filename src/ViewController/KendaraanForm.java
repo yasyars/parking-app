@@ -58,7 +58,8 @@ public class KendaraanForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 MenuUser mu = new MenuUser(user);
-                //         mu.setVisible(true);
+                mu.setVisible(true);
+                mu.setLocationRelativeTo(null);
             }
         });
         insertButton.addActionListener(new ActionListener() {

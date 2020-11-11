@@ -55,7 +55,8 @@ public class MenuUser extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                AreaParkirForm ap = new AreaParkirForm(user);
+                System.out.println("Debug parkir button: "+ user.getId());
+                ParkirForm ap = new ParkirForm(user);
                 ap.setVisible(true);
             }
         });
