@@ -71,7 +71,7 @@ public class MenuUser extends JFrame{
     }
 
     public void setMailLabel(String mail) {
-        this.mailField.setText(mail);
+        this.mailField.setText(user.getEmail());
     }
 
 //    public Integer getIdUser() {
