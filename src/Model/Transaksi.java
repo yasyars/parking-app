@@ -1,6 +1,8 @@
 package Model;
 
-public class TransaksiAdmin {
+import java.time.LocalTime;
+
+public class Transaksi {
     private int id;
     private Kendaraan kendaraan;
     private Customer user;
@@ -11,7 +13,7 @@ public class TransaksiAdmin {
     private String duration;
     private double totalTransaction;
 
-    public TransaksiAdmin(){};
+    public Transaksi(){};
 
     public int getId() {
         return id;
@@ -84,4 +86,11 @@ public class TransaksiAdmin {
     public void setTotalTransaction(double totalTransaction) {
         this.totalTransaction = totalTransaction;
     }
+
+//    public String setCalculateDuration(){
+//
+//        LocalTime closeHour = LocalTime.parse(this.getCloseHour());
+//        return closeHour;
+//        this.getStartTime()
+//    }
 }

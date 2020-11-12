@@ -4,8 +4,8 @@ import java.util.List;
 
 
 public class TableModelTransaksiAdmin extends AbstractTableModel{
-    List<TransaksiAdmin> listOfTransaksi;
-    public TableModelTransaksiAdmin(List<TransaksiAdmin> listOfTransaksi){
+    List<Transaksi> listOfTransaksi;
+    public TableModelTransaksiAdmin(List<Transaksi> listOfTransaksi){
         this.listOfTransaksi = listOfTransaksi;
     }
 

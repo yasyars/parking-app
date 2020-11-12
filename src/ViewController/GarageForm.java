@@ -67,10 +67,8 @@ public class GarageForm extends JFrame{
         try{
             DAOArea daoArea = new DAOArea();
             List<Area> areas =  daoArea.getAll();
-            System.out.println("Debug : " + areas);
             for (Area area: areas){
                 cmbidarea.addItem(area);
-                System.out.println("Debug : " + (Area) cmbidarea.getSelectedItem());
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Gagal membuka data area");

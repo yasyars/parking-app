@@ -155,7 +155,6 @@ public class Registrasi extends JFrame{
     }
 
     public int getIsAdmin() {
-        System.out.println("Debug: "+ isAdminCombo.getSelectedIndex());
         return isAdminCombo.getSelectedIndex();
     }
 

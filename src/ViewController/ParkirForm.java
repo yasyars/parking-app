@@ -1,9 +1,6 @@
 package ViewController;
 
-import DAO.DAOArea;
-import DAO.DAOGarage;
-import DAO.DAOKendaraan;
-import DAO.DAOParkir;
+import DAO.*;
 import Model.*;
 import com.github.lgooddatepicker.components.DateTimePicker;
 
@@ -81,7 +78,20 @@ public class ParkirForm extends JFrame {
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                daoParkir.unpark(daoParkir.getByUser(user));
+                Parkir park = daoParkir.getByUser(user) ;
+                daoParkir.unpark(park);
+
+                System.out.println("Debug Parkir Form 1: "+ park.getStartTime());
+                DAOTransaksi daoTransaksi = new DAOTransaksi();
+                Transaksi tr = new Transaksi();
+
+                tr.setArea(park.getArea());
+                tr.setEndTime(getDateTimePickerText());
+                tr.setGarage(park.getGarage());
+                tr.setKendaraan(park.getKendaraan());
+                tr.setStartTime(park.getStartTime());
+                tr.setUser(user);
+
                 dispose();
                 ParkirForm p = new ParkirForm(user);
                 p.setVisible(true);
@@ -89,6 +99,7 @@ public class ParkirForm extends JFrame {
 
             }
         });
+
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,13 +107,19 @@ public class ParkirForm extends JFrame {
                 parkir.setArea((Area)cmbArea.getSelectedItem());
                 parkir.setKendaraan((Kendaraan)cmbKendaraan.getSelectedItem());
                 parkir.setGarage((Garage)cmbGarage.getSelectedItem());
-                parkir.setUser(user);
 
-                daoParkir.park(parkir);
+                if (parkir.getGarage().getOperationalTime().isOpen(getDateTimePickerText())){
+                    parkir.setUser(user);
+                    daoParkir.park(parkir);
 
-                disableAllforStart();
-                loadTable();
+                    disableAllforStart();
+                    loadTable();
+                    labelBukaTutup.setText("");
 
+                }else{
+                    JOptionPane.showMessageDialog(null,"Garage tutup di waktu yang dipilih");
+                    updateLabel();
+                }
             }
         });
 
@@ -162,10 +179,10 @@ public class ParkirForm extends JFrame {
             labelJamOperasional.setText(
                     "Jam Operasional: " + (opTime.getDay() + ", " + opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
 
-            System.out.println("Debug updateLabel: " + !opTime.isOpen(this.getDateTimePickerText()));
 
             if (!opTime.isOpen(this.getDateTimePickerText())){
                 disableStartButton();
+                setLabelBukaTutup();
             }
         }
 
@@ -188,10 +205,8 @@ public class ParkirForm extends JFrame {
         try{
             DAOArea daoArea = new DAOArea();
             List<Area> areas =  daoArea.getAll();
-            System.out.println("Debug : " + areas);
             for (Area area: areas){
                 cmbArea.addItem(area);
-                System.out.println("Debug : " + (Area) cmbArea.getSelectedItem());
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to load area data!","Fail load data", 2);
@@ -232,11 +247,6 @@ public class ParkirForm extends JFrame {
 
     }
 
-    private void loadPark(){
-        DAOParkir daoParkir = new DAOParkir();
-        Parkir park = daoParkir.getByUser(this.user);
-//        if (park==)
-    }
     private void enableStartButton(){
         startButton.setEnabled(true);
     }

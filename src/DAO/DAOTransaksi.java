@@ -1,9 +1,7 @@
 package DAO;
 
 import Helper.DbConnection;
-import Model.Area;
-import Model.Kendaraan;
-import Model.TransaksiAdmin;
+import Model.Transaksi;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,38 +10,38 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DAOTransaksiAdmin {
-    Connection CONN =(Connection) DbConnection.getConnection();
+public class DAOTransaksi {
+    Connection CONN =DbConnection.getConnection();
     private final String readQuery = "SELECT * FROM transaksi_parkir";
     private final String getByIdQuery = "SELECT * FROM area_parkir WHERE id_area = ?";
 
 
-    public DAOTransaksiAdmin(){};
+    public DAOTransaksi(){};
 
-    public List<TransaksiAdmin> getAll() {
-        List<TransaksiAdmin> listOfTransaksi = null;
+    public List<Transaksi> getAll() {
+        List<Transaksi> listOfTransaksi = null;
         try{
-            listOfTransaksi = new ArrayList<TransaksiAdmin>();
+            listOfTransaksi = new ArrayList<Transaksi>();
 
 
             Statement stm = CONN.createStatement();
             ResultSet res = stm.executeQuery(readQuery);
 
             while (res.next()){
-                TransaksiAdmin transaksiAdmin = new TransaksiAdmin();
+                Transaksi transaksi = new Transaksi();
                 try{
                     DAOCustomer daoUser = new DAOCustomer();
-                    transaksiAdmin.setUser(daoUser.getById(res.getInt(2)));
+                    transaksi.setUser(daoUser.getById(res.getInt(2)));
                     DAOArea dArea = new DAOArea();
-                    transaksiAdmin.setArea(dArea.getById(res.getInt(3)));
+                    transaksi.setArea(dArea.getById(res.getInt(3)));
                     DAOGarage daoGarage = new DAOGarage();
-                    transaksiAdmin.setGarage(daoGarage.getById(res.getInt(4)));
-                    transaksiAdmin.setDuration(res.getString(7));
-                    transaksiAdmin.setTotalTransaction(res.getInt(8));
+                    transaksi.setGarage(daoGarage.getById(res.getInt(4)));
+                    transaksi.setDuration(res.getString(7));
+                    transaksi.setTotalTransaction(res.getInt(8));
                 }catch (Exception error){
                     System.out.println("Error : " +error.getMessage());
                 }
-                listOfTransaksi.add(transaksiAdmin);
+                listOfTransaksi.add(transaksi);
             }
         }catch (SQLException e){
             System.out.println("Error : " +e.getMessage());

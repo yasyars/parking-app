@@ -1,8 +1,6 @@
 package ViewController;
 
-import DAO.DAOKendaraan;
-import DAO.DAOTransaksiAdmin;
-import Model.TableModelKendaraan;
+import DAO.DAOTransaksi;
 import Model.TableModelTransaksiAdmin;
 
 import javax.swing.*;
@@ -19,13 +17,13 @@ public class RiwayatTransaksiForm extends JFrame{
     private JComboBox cbDate;
 
     public void tampilkan_data() {
-        DAOTransaksiAdmin daoTransaksiAdmin= new DAOTransaksiAdmin();
-        TableModelTransaksiAdmin model = new TableModelTransaksiAdmin(daoTransaksiAdmin.getAll());
+        DAOTransaksi daoTransaksi = new DAOTransaksi();
+        TableModelTransaksiAdmin model = new TableModelTransaksiAdmin(daoTransaksi.getAll());
         TabelTransaksiAdmin.setModel(model);
     }
 
     public RiwayatTransaksiForm(){
-        DAOTransaksiAdmin daoTransaksiAdmin= new DAOTransaksiAdmin();
+        DAOTransaksi daoTransaksi = new DAOTransaksi();
         tampilkan_data();
         add(panelriwayattransaksi);
         setTitle("Aplikasi Parking Subcription");
