@@ -1,9 +1,9 @@
 package Model;
 
-public class Transaction {
+public class TransaksiAdmin {
     private int id;
     private Kendaraan kendaraan;
-    private User user;
+    private Customer user;
     private Area area;
     private Garage garage;
     private String startTime;
@@ -11,7 +11,7 @@ public class Transaction {
     private String duration;
     private double totalTransaction;
 
-    public Transaction(){};
+    public TransaksiAdmin(){};
 
     public int getId() {
         return id;
@@ -29,11 +29,11 @@ public class Transaction {
         this.kendaraan = kendaraan;
     }
 
-    public User getUser() {
+    public Customer getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Customer user) {
         this.user = user;
     }
 

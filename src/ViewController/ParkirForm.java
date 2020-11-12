@@ -32,14 +32,14 @@ public class ParkirForm extends JFrame {
     private JPanel tableParkir;
     private JLabel labelJamOperasional;
     private Customer user;
-    private Transaction parkir;
+    private TransaksiAdmin parkir;
 
     public ParkirForm(Customer user){
         add(parkirPanel);
         setSize(500,500);
         setLocationRelativeTo(null);
         this.user = user;
-        parkir = new Transaction();
+        parkir = new TransaksiAdmin();
         parkir.setUser(user);
 
         loadData();
@@ -148,6 +148,18 @@ public class ParkirForm extends JFrame {
             List<Kendaraan> kendaraans =  daoKendaraan.getUnparkedKendaraanByUser(this.user);
             for (Kendaraan kendaraan: kendaraans){
                 cmbKendaraan.addItem(kendaraan);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"Fail to load Kendaraan Data!","Fail load data",2);
+        }
+    }
+//============================================================
+    private void loadGarage(){
+        try{
+            DAOGarage daoGarage = new DAOGarage();
+            List<Garage> garages =  daoGarage.getUnparkedGarageByUser(this.user);
+            for (Garage garage: garages){
+                cmbKendaraan.addItem(garage);
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to load Kendaraan Data!","Fail load data",2);

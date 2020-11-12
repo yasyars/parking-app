@@ -17,9 +17,47 @@ import java.util.List;
 public class DAOCustomer extends DAOUser{
 
     private final String insertQuery = "INSERT INTO user (nama,alamat, email, password, is_admin, subscription) values (?,?,?,?,?,?)";
-
+    private final String getByIdQuery = "SELECT * FROM user WHERE id_user = ?";
 
     public DAOCustomer(){};
+    public Customer getById(int id){
+        Customer customer = new Customer();
+        PreparedStatement stm = null;
+        try{
+
+            stm = CONN.prepareStatement(getByIdQuery);
+            stm.setInt(1, id);
+            ResultSet res = stm.executeQuery();
+            res.next();
+
+            try{
+                customer.setId(res.getInt("id_user"));
+                customer.setName(res.getString("nama"));
+                customer.setAddress(res.getString("alamat"));
+                customer.setEmail(res.getString("email"));
+                customer.setPassword(res.getString("password"));
+                customer.setAdmin(res.getInt("is_admin"));
+
+
+
+
+            }catch (Exception error){
+                JOptionPane.showMessageDialog(null,"Cannot get area!" + error.getMessage());
+            }
+        }catch(HeadlessException| SQLException e){
+            JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+        }finally{
+            try{
+                stm.close();
+            }catch(SQLException sqle){
+                System.out.println("Error : "+sqle.getMessage());
+            }
+        }
+
+        return customer;
+    }
+
+
 
     @Override
     public Customer get(int id) throws Exception{

@@ -1,11 +1,16 @@
 package ViewController;
 
+import DAO.DAOKendaraan;
+import DAO.DAOTransaksiAdmin;
+import Model.TableModelKendaraan;
+import Model.TableModelTransaksiAdmin;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RiwayatTransaksiForm extends JFrame{
-    private JTable table1;
+    private JTable TabelTransaksiAdmin;
     private JLabel jenisLabel;
     private JLabel dateLabel;
     private JPanel panelriwayattransaksi;
@@ -13,7 +18,15 @@ public class RiwayatTransaksiForm extends JFrame{
     private JComboBox cbJenis;
     private JComboBox cbDate;
 
+    public void tampilkan_data() {
+        DAOTransaksiAdmin daoTransaksiAdmin= new DAOTransaksiAdmin();
+        TableModelTransaksiAdmin model = new TableModelTransaksiAdmin(daoTransaksiAdmin.getAll());
+        TabelTransaksiAdmin.setModel(model);
+    }
+
     public RiwayatTransaksiForm(){
+        DAOTransaksiAdmin daoTransaksiAdmin= new DAOTransaksiAdmin();
+        tampilkan_data();
         add(panelriwayattransaksi);
         setTitle("Aplikasi Parking Subcription");
         setSize(600,450);

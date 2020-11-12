@@ -107,7 +107,12 @@ public class GarageForm extends JFrame{
                 txtWaktuTutup.setText(waktu_tutup);
                 String id_area = tabelGarage.getValueAt(baris,5).toString();
                 DAOArea daoArea = new DAOArea();
-                Area area = daoArea.getById(Integer.parseInt(id_area));
+                Area area = null;
+                try {
+                    area = daoArea.getById(Integer.parseInt(id_area));
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
                 cmbidarea.setSelectedItem(area);
 
                 String tarif_motor = (String) tabelGarage.getValueAt(baris,6);
