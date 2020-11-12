@@ -43,8 +43,7 @@ public class ParkirForm extends JFrame {
         parkir.setUser(user);
 
         loadData();
-        updateLabel();
-
+        disableStopButton();
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -65,10 +64,22 @@ public class ParkirForm extends JFrame {
             }
         });
 
+        cmbArea.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadGarage((Area) cmbArea.getSelectedItem());
+            }
+        });
+
         cmbGarage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateLabel();
+                if (cmbGarage.getItemCount()==0) {
+                    disableStartButton();
+                }else{
+                    enableStartButton();
+                }
             }
         });
 
@@ -79,15 +90,19 @@ public class ParkirForm extends JFrame {
         this.initDateTime();
         this.loadKendaraan();
         this.loadArea();
-        this.loadGarage();
+        this.loadGarage((Area)this.cmbArea.getSelectedItem());
+
 
     }
 
     public void updateLabel(){
-        OperationalTime opTime = ((Garage)cmbGarage.getSelectedItem()).getOperationalTime();
-        labelJamOperasional.setText(
-                "Jam Operasional: "+ (opTime.getDay()+", "+ opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
+        labelJamOperasional.setText("Jam Operasional: -");
+        if (cmbGarage.getItemCount()!=0) {
 
+            OperationalTime opTime = ((Garage) cmbGarage.getSelectedItem()).getOperationalTime();
+            labelJamOperasional.setText(
+                    "Jam Operasional: " + (opTime.getDay() + ", " + opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
+        }
     }
 
     public void initDateTime(){
@@ -132,10 +147,13 @@ public class ParkirForm extends JFrame {
         }
     }
 
-    private void loadGarage(){
+    private void loadGarage(Area area){
+        if (cmbGarage.getItemCount()!=0){
+            cmbGarage.removeAllItems();
+        }
         try{
             DAOGarage daoGarage = new DAOGarage();
-            List<Garage> garages =  daoGarage.getAll();
+            List<Garage> garages =  daoGarage.getByArea(area);
             for (Garage garage: garages){
                 cmbGarage.addItem(garage);
             }
@@ -145,6 +163,19 @@ public class ParkirForm extends JFrame {
         }
     }
 
+    private void enableStartButton(){
+        startButton.setEnabled(true);
+    }
+    private void disableStartButton(){
+        startButton.setEnabled(false);
+    }
+    private void enableStopButton(){
+        stopButton.setEnabled(false);
+    }
+
+    private void disableStopButton(){
+        stopButton.setEnabled(false);
+    }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
