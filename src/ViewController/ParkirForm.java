@@ -83,6 +83,13 @@ public class ParkirForm extends JFrame {
             }
         });
 
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cmb
+            }
+        });
+
     }
 
     public void loadData(){
