@@ -19,9 +19,8 @@ public class DAOGarage {
     private final String readQuery = "SELECT * FROM garage";
     private final String updateQuery = "UPDATE garage SET nama_garage = ? , hari_operasional = ?, waktu_buka = ?, waktu_tutup = ?, id_area =?  ,tarif_motor=?, tarif_mobil=? WHERE id_garage = ?";
     private final String deleteQuery = "DELETE FROM garage WHERE id_garage = ?";
-<<<<<<< HEAD
     private final String getByAreaQuery = "SELECT * FROM garage WHERE id_area= ?";
-=======
+
     private final String getByIdQuery = "SELECT * FROM garage WHERE id_garage = ?";
 
     public Garage getById(int id){
@@ -61,9 +60,6 @@ public class DAOGarage {
 
         return garage;
     }
-
-
->>>>>>> c84c84f15ceda6dd7d38b555608419fb929aa222
 
     public List<Garage> getAll(){
         List<Garage> lg = null;

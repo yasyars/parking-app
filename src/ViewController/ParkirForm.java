@@ -83,12 +83,6 @@ public class ParkirForm extends JFrame {
             }
         });
 
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cmb
-            }
-        });
 
     }
 
@@ -148,18 +142,6 @@ public class ParkirForm extends JFrame {
             List<Kendaraan> kendaraans =  daoKendaraan.getUnparkedKendaraanByUser(this.user);
             for (Kendaraan kendaraan: kendaraans){
                 cmbKendaraan.addItem(kendaraan);
-            }
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Fail to load Kendaraan Data!","Fail load data",2);
-        }
-    }
-//============================================================
-    private void loadGarage(){
-        try{
-            DAOGarage daoGarage = new DAOGarage();
-            List<Garage> garages =  daoGarage.getUnparkedGarageByUser(this.user);
-            for (Garage garage: garages){
-                cmbKendaraan.addItem(garage);
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to load Kendaraan Data!","Fail load data",2);
