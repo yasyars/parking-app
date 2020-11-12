@@ -23,20 +23,6 @@ public class AreaAdminForm extends JFrame {
     private JButton backButton;
     private List<Area> listOfArea;
 
-    public void kosongkan_form(){
-        txtIdArea.setEditable(true);
-        txtIdArea.setText(null);
-        txtNamaArea.setEditable(true);
-        txtNamaArea.setText(null);
-    }
-
-    public void tampilkan_data(){
-        DAOArea dArea = new DAOArea();
-        TableModelArea model = new TableModelArea(dArea.getAll());
-
-        tabelAreaParkir.setModel(model);
-
-    }
     public AreaAdminForm(){
         DAOArea dArea = new DAOArea();
 
@@ -121,5 +107,23 @@ public class AreaAdminForm extends JFrame {
                 mu.setVisible(true);
             }
         });
+    }
+    public void kosongkan_form(){
+        txtIdArea.setEditable(true);
+        txtIdArea.setText(null);
+        txtNamaArea.setEditable(true);
+        txtNamaArea.setText(null);
+    }
+
+    public void tampilkan_data(){
+        DAOArea dArea = new DAOArea();
+        try {
+            TableModelArea model = new TableModelArea(dArea.getAll());
+            tabelAreaParkir.setModel(model);
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+
+
     }
 }
