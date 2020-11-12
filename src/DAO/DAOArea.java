@@ -20,7 +20,7 @@ public class DAOArea {
 
     public DAOArea(){};
 
-    public Area getById(int idArea){
+    public Area getById(int idArea) throws Exception{
         Area area = new Area();
         PreparedStatement stm = null;
         try{
@@ -35,10 +35,10 @@ public class DAOArea {
                 area.setName(res.getString("nama_area"));
 
             }catch (Exception error){
-                JOptionPane.showMessageDialog(null,"Cannot get area!" + error.getMessage());
+                throw new Exception("Error : " + error.getMessage());
             }
         }catch(HeadlessException| SQLException e){
-            JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
+            throw new Exception("Error : " + e.getMessage());
         }finally{
             try{
                 stm.close();
@@ -49,7 +49,7 @@ public class DAOArea {
 
         return area;
     }
-    public List<Area> getAll(){
+    public List<Area> getAll() throws Exception{
         List<Area> listOfArea = null;
         try{
             listOfArea = new ArrayList<Area>();
@@ -63,26 +63,25 @@ public class DAOArea {
                 try{
                     area.setName(res.getString(2));
                 }catch (Exception error){
-                    System.out.println("Error : " +error.getMessage());
+                    throw new Exception("Error: "+ error.getMessage());
                 }
                 listOfArea.add(area);
             }
         }catch (SQLException e){
-            System.out.println("Error : " +e.getMessage());
+            throw new Exception("Error: "+ e.getMessage());
         }
 
         return listOfArea;
     }
 
-    public void insert(Area area){
+    public void insert(Area area) throws Exception{
         PreparedStatement stm = null;
         try{
             stm = CONN.prepareStatement(insertQuery);
             stm.setString(1, area.getName());
             stm.execute();
         }catch (HeadlessException | SQLException e){
-            System.out.println("Error : " +e.getMessage());
-
+            throw new Exception("Error: "+ e.getMessage());
         }finally{
             try{
                 stm.close();
@@ -92,7 +91,7 @@ public class DAOArea {
         }
 
     };
-    public void update (Area area){
+    public void update (Area area) throws Exception{
         PreparedStatement stm = null;
         try{
             stm = CONN.prepareStatement(updateQuery);
@@ -100,8 +99,7 @@ public class DAOArea {
             stm.setInt(2, area.getId());
             stm.execute();
         }catch (HeadlessException | SQLException e){
-            System.out.println("Error : " +e.getMessage());
-
+            throw new Exception("Error: "+ e.getMessage());
         }finally {
             try {
                 stm.close();
@@ -111,14 +109,14 @@ public class DAOArea {
         }
     };
 
-    public void delete(int id){
+    public void delete(int id) throws Exception{
         PreparedStatement stm = null;
         try{
             stm = CONN.prepareStatement(deleteQuery);
             stm.setInt(1, id);
             stm.execute();
         }catch (HeadlessException | SQLException e){
-            System.out.println("Error : " +e.getMessage());
+            throw new Exception("Error: "+ e.getMessage());
 
         }finally {
             try {
