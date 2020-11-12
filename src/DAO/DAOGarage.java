@@ -19,6 +19,47 @@ public class DAOGarage {
     private final String readQuery = "SELECT * FROM garage";
     private final String updateQuery = "UPDATE garage SET nama_garage = ? , hari_operasional = ?, waktu_buka = ?, waktu_tutup = ?, id_area =?  ,tarif_motor=?, tarif_mobil=? WHERE id_garage = ?";
     private final String deleteQuery = "DELETE FROM garage WHERE id_garage = ?";
+    private final String getByIdQuery = "SELECT * FROM garage WHERE id_garage = ?";
+
+    public Garage getById(int id){
+        Garage garage = new Garage();
+        PreparedStatement stm = null;
+        try{
+
+            stm = CONN.prepareStatement(getByIdQuery);
+            stm.setInt(1, id);
+            ResultSet res = stm.executeQuery();
+            res.next();
+
+            try{
+                garage.setId(res.getInt("id_garage"));
+                garage.setName(res.getString("nama_garage"));
+                OperationalTime time = new OperationalTime();
+                time.setDay(res.getString("hari_operasional"));
+                time.setOpenHour(res.getString("waktu_buka"));
+                time.setCloseHour(res.getString("waktu_tutup"));
+                garage.setOperationalTime(time);
+                garage.setArea(Integer.parseInt(res.getString("id_area")));
+                garage.setTarifMotor(res.getDouble("tarif_motor"));
+                garage.setTarifMobil(res.getDouble("tarif_mobil"));
+
+            }catch (Exception error){
+                System.out.println("Error : " +error.getMessage());
+            }
+        }catch(HeadlessException| SQLException e){
+            System.out.println("Error : " +e.getMessage());
+        }finally{
+            try{
+                stm.close();
+            }catch(SQLException sqle){
+                System.out.println("Error : "+sqle.getMessage());
+            }
+        }
+
+        return garage;
+    }
+
+
 
     public List<Garage> getAll(){
         List<Garage> lg = null;
