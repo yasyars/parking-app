@@ -1,11 +1,9 @@
 package ViewController;
 
 import DAO.DAOArea;
+import DAO.DAOGarage;
 import DAO.DAOKendaraan;
-import Model.Area;
-import Model.Customer;
-import Model.Kendaraan;
-import Model.Transaction;
+import Model.*;
 import com.github.lgooddatepicker.components.DateTimePicker;
 
 import javax.swing.*;
@@ -32,6 +30,7 @@ public class ParkirForm extends JFrame {
     private JButton stopButton;
     private JButton backButton;
     private JPanel tableParkir;
+    private JLabel labelJamOperasional;
     private Customer user;
     private Transaction parkir;
 
@@ -44,7 +43,7 @@ public class ParkirForm extends JFrame {
         parkir.setUser(user);
 
         loadData();
-
+        updateLabel();
 
 
         backButton.addActionListener(new ActionListener() {
@@ -66,14 +65,28 @@ public class ParkirForm extends JFrame {
             }
         });
 
+        cmbGarage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateLabel();
+            }
+        });
+
     }
 
     public void loadData(){
 
         this.initDateTime();
-        this.loadArea();
         this.loadKendaraan();
+        this.loadArea();
+        this.loadGarage();
 
+    }
+
+    public void updateLabel(){
+        OperationalTime opTime = ((Garage)cmbGarage.getSelectedItem()).getOperationalTime();
+        labelJamOperasional.setText(
+                "Jam Operasional: "+ (opTime.getDay()+", "+ opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
 
     }
 
@@ -116,6 +129,19 @@ public class ParkirForm extends JFrame {
             }
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to load Kendaraan Data!","Fail load data",2);
+        }
+    }
+
+    private void loadGarage(){
+        try{
+            DAOGarage daoGarage = new DAOGarage();
+            List<Garage> garages =  daoGarage.getAll();
+            for (Garage garage: garages){
+                cmbGarage.addItem(garage);
+            }
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,"Fail to load Garage Data!","Fail load data",2);
         }
     }
 

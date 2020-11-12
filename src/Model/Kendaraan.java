@@ -1,6 +1,10 @@
 package Model;
 
 import javax.swing.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.regex.Pattern;
 
 public class Kendaraan {
@@ -64,10 +68,10 @@ public class Kendaraan {
         }
     }
 
+
     public String toString() {
         return this.getTipe() + " - " + this.getNoPlat();
     }
-
 
 }
 

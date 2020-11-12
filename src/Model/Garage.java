@@ -73,6 +73,10 @@ public class Garage {
         this.tarifMobil = tarif_mobil;
     }
 
+    public String toString() {
+        return "ID: "+ this.getId() + ", " + this.getName();
+    }
+
 //    public int getIsOccupied() {
 //        return isOccupied;
 //    }
