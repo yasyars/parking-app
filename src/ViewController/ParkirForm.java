@@ -44,6 +44,9 @@ public class ParkirForm extends JFrame {
 
         loadData();
         disableStopButton();
+        if (cmbKendaraan.getItemCount()==0 || cmbArea.getItemCount()==0 || cmbGarage.getItemCount()==0) {
+            disableStartButton();
+        }
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -67,7 +70,9 @@ public class ParkirForm extends JFrame {
         cmbArea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loadGarage((Area) cmbArea.getSelectedItem());
+                if (cmbArea.getItemCount()!=0) {
+                    loadGarage((Area) cmbArea.getSelectedItem());
+                }
             }
         });
 
@@ -91,7 +96,10 @@ public class ParkirForm extends JFrame {
         this.initDateTime();
         this.loadKendaraan();
         this.loadArea();
-        this.loadGarage((Area)this.cmbArea.getSelectedItem());
+
+        if (cmbArea.getItemCount()!=0) {
+            this.loadGarage((Area) this.cmbArea.getSelectedItem());
+        }
 
 
     }
@@ -99,7 +107,6 @@ public class ParkirForm extends JFrame {
     public void updateLabel(){
         labelJamOperasional.setText("Jam Operasional: -");
         if (cmbGarage.getItemCount()!=0) {
-
             OperationalTime opTime = ((Garage) cmbGarage.getSelectedItem()).getOperationalTime();
             labelJamOperasional.setText(
                     "Jam Operasional: " + (opTime.getDay() + ", " + opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
@@ -123,6 +130,7 @@ public class ParkirForm extends JFrame {
     }
 
     private void loadArea(){
+
         try{
             DAOArea daoArea = new DAOArea();
             List<Area> areas =  daoArea.getAll();
