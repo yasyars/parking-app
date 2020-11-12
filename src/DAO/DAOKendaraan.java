@@ -20,6 +20,9 @@ public class DAOKendaraan {
     protected static final String getPlatInTransc = "SELECT * FROM transaksi_parkir WHERE plat_no = ?";
     protected final String getByUser = "SELECT * FROM kendaraan WHERE id_user=?";
     protected final String getUnparked = "SELECT * FROM kendaraan WHERE id_user = ? AND is_parked=0";
+    protected final String getByPlat = "SELECT * FROM kendaraan WHERE plat_no = ?";
+    protected final String setIsParked = "UPDATE kendaraan SET is_parked = ? WHERE plat_no=?";
+
 
     public DAOKendaraan() {
     }
@@ -45,7 +48,7 @@ public class DAOKendaraan {
                 lk.add(kendaraan);
             }
         } catch (SQLException e) {
-            throw new Exception("Error : " + e.getMessage());
+            throw new Exception("Error DAOKendaraan 1: " + e.getMessage());
         }
 
         return lk;
@@ -84,12 +87,12 @@ public class DAOKendaraan {
             stm.execute();
 
         } catch (HeadlessException | SQLException e) {
-            throw new Exception("Error : " + e.getMessage());
+            throw new Exception("Error DAOKendaraan 2: " + e.getMessage());
         } finally {
             try {
                 stm.close();
             } catch (SQLException k) {
-                throw new Exception("Error : " + k.getMessage());
+                throw new Exception("Error DAOKendaraan 3: " + k.getMessage());
             }
         }
     }
@@ -129,35 +132,55 @@ public class DAOKendaraan {
             while (res.next()) {
                 Kendaraan kendaraan = new Kendaraan();
 
-
-                System.out.println(kendaraan.getNoPlat());
-                kendaraan.setTipe(res.getString("tipe_kendaraan"));
-                kendaraan.setIsParked(res.getInt("is_parked"));
-                kendaraan.setOwner(user);
-                try{
-                    kendaraan.setNoPlat(res.getString("plat_no"));
-                }catch(Exception e){
-                    System.out.println("setPlat" + e);
-                }
-
                 try {
-//                    System.out.println("Debug: "+ res.getString("plat_no"));
-//
-//                    kendaraan.setNoPlat(res.getString("plat_no"));
-//                    System.out.println(kendaraan.getNoPlat());
-//                    kendaraan.setTipe(res.getString("tipe_kendaraan"));
-//                    kendaraan.setIsParked(res.getInt("is_parked"));
-//                    kendaraan.setOwner(user);
+                    System.out.println(kendaraan.getNoPlat());
+                    kendaraan.setTipe(res.getString("tipe_kendaraan"));
+                    kendaraan.setIsParked(res.getInt("is_parked"));
+                    kendaraan.setOwner(user);
+                    try{
+                        kendaraan.setNoPlat(res.getString("plat_no"));
+                    }catch(Exception e){
+                        System.out.println("setPlat" + e);
+                    }
+
                     lg.add(kendaraan);
                 } catch (Exception error) {
-                    System.out.println("Error : " + error.getMessage());
+                    System.out.println("Error DAOKendaraan 4: " + error.getMessage());
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error : " + e.getMessage());
+            System.out.println("Error DAOKendaraan 5: " + e.getMessage());
         }
 
         return lg;
+    }
+
+    public Kendaraan getByPlat(String plat){
+        PreparedStatement stm = null;
+        Kendaraan kendaraan = new Kendaraan();
+
+        try{
+            stm = CONN.prepareStatement(getByPlat);
+            stm.setString(1, plat);
+            ResultSet res = stm.executeQuery();
+            res.next();
+
+
+
+            DAOCustomer daoCustomer = new DAOCustomer();
+            kendaraan.setTipe(res.getString("tipe_kendaraan"));
+            kendaraan.setIsParked(res.getInt("is_parked"));
+            kendaraan.setOwner(daoCustomer.getById(res.getInt("id_user")));
+            try{
+                kendaraan.setNoPlat(plat);
+            }catch (Exception e){
+                System.out.println("Error DAOKendaraan 6: "+ e);
+            }
+        }catch (SQLException e){
+            System.out.println("Error DAOKendaraan 7: " + e);
+        }
+
+        return kendaraan;
     }
 
     public List<Kendaraan> getByUser(Customer user) throws Exception {
@@ -179,14 +202,32 @@ public class DAOKendaraan {
                     kendaraan.setOwner(user);
                     lg.add(kendaraan);
                 } catch (Exception error) {
-                    System.out.println("Error : " + error.getMessage());
+                    System.out.println("Error DAOKendaraan 8: " + error.getMessage());
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error : " + e.getMessage());
+            System.out.println("Error DAOKendaraan 9: " + e.getMessage());
         }
 
         return lg;
+    }
+
+    public void setIsParked(Kendaraan kendaraan) throws Exception{
+        PreparedStatement stm = null;
+        try{
+            stm = CONN.prepareStatement(setIsParked);
+            stm.setInt(1, kendaraan.getIsParked());
+            stm.setString(2, kendaraan.getNoPlat());
+            stm.execute();
+        }catch (HeadlessException | SQLException e){
+            throw new Exception("Error DAOKendaraan 10: "+ e.getMessage());
+        }finally {
+            try {
+                stm.close();
+            } catch (SQLException k) {
+                System.out.println("Error DAOKendaraan 11: " + k.getMessage());
+            }
+        }
     }
 
 }

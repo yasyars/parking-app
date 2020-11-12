@@ -75,9 +75,9 @@ public class MenuUser extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                Init initForm = new Init();
-                initForm.setVisible(true);
-                initForm.setLocationRelativeTo(null);
+                Login login = new Login();
+                login.setVisible(true);
+                login.setLocationRelativeTo(null);
             }
         });
     }
