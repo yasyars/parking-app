@@ -51,10 +51,8 @@ public class DAOUser {
                 user.setAdmin(res.getInt("is_admin"));
 
             }catch (Exception error){
-               //JOptionPane.showMessageDialog(null,"Email atau password salah!");
             }
         }catch(HeadlessException| SQLException e){
-            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
             throw new Exception("Error : " + e.getMessage());
         }finally{
             try { res.close(); } catch (Exception ex) { /* ignored */ }
@@ -68,7 +66,7 @@ public class DAOUser {
     public void insert(User user) throws Exception{
         PreparedStatement stm = null;
         try {
-            Customer c = (Customer) user;
+            //Customer c = (Customer) user;
             stm = CONN.prepareStatement(insertQuery);
             stm.setString(1, user.getName());
             stm.setString(2,user.getAddress());
@@ -77,7 +75,6 @@ public class DAOUser {
             stm.setInt(5, user.isAdmin());
             stm.execute();
         }catch (SQLException e){
-            //JOptionPane.showMessageDialog(null,"Error input data: " +e);
 			throw new Exception("Error : " + e.getMessage());
         }finally {
             try{
@@ -114,14 +111,13 @@ public class DAOUser {
                     user.setPassword(res.getString("password"));
                     user.setAdmin(res.getInt("is_admin"));
                 }catch (Exception e){
-                    //System.out.println("Error "+ e);
+                    throw new Exception(e.getMessage());
                 }
             }else{
                 System.out.println("Error login");
             }
         }catch(HeadlessException| SQLException e){
 			throw new Exception("Error : " + e.getMessage());
-            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
         }finally{
             try{
                 stm.close();
