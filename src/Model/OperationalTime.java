@@ -1,6 +1,7 @@
 package Model;
 
 import javax.swing.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -28,22 +29,26 @@ public class OperationalTime {
     public Boolean isOpen(String dateTime){
         //string dalam bentuk format form
 
+        LocalDateTime localDateTime;
+        try{
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
-        LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
+            localDateTime = LocalDateTime.parse(dateTime, formatter);
+        }catch(Exception e){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
+            localDateTime = LocalDateTime.parse(dateTime, formatter);
+        }
+
 
         int startCompare = localDateTime.toLocalTime().compareTo(this.getOpenHourTime());
         int endCompare = localDateTime.toLocalTime().compareTo(this.getCloseHourTime());
-
 
         if (!localDateTime.format(DateTimeFormatter.ofPattern("EEEE")).equals(getHariEnglish(this.getDay()))){
             return false;
         }else if(startCompare<0 || endCompare>0){
             return false;
         }
-
         return true;
-
     }
 
     public String getHariEnglish(String hari){

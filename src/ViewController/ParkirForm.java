@@ -33,6 +33,7 @@ public class ParkirForm extends JFrame {
     private Customer user;
     private Parkir parkir;
     private JPanel panel;
+
     public ParkirForm(Customer user){
         add(parkirPanel);
         setSize(700,500);
@@ -46,11 +47,6 @@ public class ParkirForm extends JFrame {
         disableStopButton();
         DAOParkir daoParkir = new DAOParkir();
 
-        JTextField dateField = this.dateTimePicker.getDatePicker().getComponentDateTextField();
-        JTextField timeField = this.dateTimePicker.getTimePicker().getComponentTimeTextField();
-
-        DAOGarage daoGarage = new DAOGarage();
-
         setLabelBukaTutup();
 
         if (daoParkir.getByUser(user) != null){
@@ -63,7 +59,6 @@ public class ParkirForm extends JFrame {
                 setLabelBukaTutup();
             }
         });
-
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -160,8 +155,6 @@ public class ParkirForm extends JFrame {
         }
 
         this.loadTable();
-
-
     }
 
     private void loadTable(){
@@ -199,6 +192,9 @@ public class ParkirForm extends JFrame {
         dateField.setText(dateNow);
         String timeNow = dt.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
         timeField.setText(timeNow);
+
+
+
     }
 
 

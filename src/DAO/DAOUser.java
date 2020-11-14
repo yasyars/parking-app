@@ -66,7 +66,6 @@ public class DAOUser {
     public void insert(User user) throws Exception{
         PreparedStatement stm = null;
         try {
-            //Customer c = (Customer) user;
             stm = CONN.prepareStatement(insertQuery);
             stm.setString(1, user.getName());
             stm.setString(2,user.getAddress());

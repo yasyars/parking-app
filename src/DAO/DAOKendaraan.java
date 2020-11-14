@@ -137,11 +137,8 @@ public class DAOKendaraan {
             System.out.println("Debug stm: "+ stm);
 
             while (res.next()) {
-                //Kendaraan kendaraan = new Kendaraan();
-
                 if (res.getString("tipe_kendaraan").equals("Mobil")) {
                     Mobil mo = new Mobil();
-                    //kendaraan.setTipe(res.getString("tipe_kendaraan"));
                     mo.setIsParked(res.getInt("is_parked"));
                     mo.setOwner(user);
                     try {
