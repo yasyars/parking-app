@@ -112,7 +112,6 @@ public class UserForm extends JFrame{
             setNama(user.getName());
             setAlamat(user.getAddress());
             setEmail(user.getEmail());
-            System.out.println("Debug : " + user.getSubscription());
             setSubsLabel();
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to get user data" + e);

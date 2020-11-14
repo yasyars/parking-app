@@ -93,7 +93,6 @@ public class ParkirForm extends JFrame {
                 DAOTransaksi daoTransaksi = new DAOTransaksi();
                 List<Transaksi> allTransaksi = daoTransaksi.getByUser(user);
 
-                System.out.println("Debug ParkirForm stopbutton:" + cmp);
                 Transaksi tr = new Transaksi();
 
                 if (allTransaksi.size() == 0){
@@ -134,7 +133,6 @@ public class ParkirForm extends JFrame {
                     JOptionPane.showMessageDialog(null,"Waktu dan tanggal yang dipilih harus setelah \nwaktu masuk di hari operasional yang sama");
                 }
 
-                System.out.println("Debug Parkir Form 1: "+ parkir.getStartTime());
             }
         });
 
@@ -413,9 +411,9 @@ public class ParkirForm extends JFrame {
 
         String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"));
 
-        System.out.println("Debug: \n" + "Day: " +
-                dateTime.format(DateTimeFormatter.ofPattern("EEEE"))+
-                "\nTime: " + dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+//        System.out.println("Debug: \n" + "Day: " +
+//                dateTime.format(DateTimeFormatter.ofPattern("EEEE"))+
+//                "\nTime: " + dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         return formattedDateTime;
     }
 

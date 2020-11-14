@@ -100,7 +100,6 @@ public class DAOUser {
             stm.setInt(3, this.isAdmin);
 
             res = stm.executeQuery();
-            //System.out.println("Debug : " +stm);
             if (res.next()){
                 try{
                     user.setId(res.getInt("id_user"));

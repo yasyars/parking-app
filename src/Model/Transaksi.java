@@ -121,10 +121,6 @@ public class Transaksi {
 
         int dur = (int) Math.ceil( (double)(milliEnd - milliStart) / 3600000);
 
-        System.out.println("Debug Transaksi set calculation: "+(milliEnd));
-        System.out.println("Debug Transaksi set calculation: "+(milliStart));
-
-        System.out.println("Debug Transaksi set calculation: "+(dur));
         this.setDuration(dur);
     }
 
