@@ -26,13 +26,13 @@ public class ParkirForm extends JFrame {
     private JButton startButton;
     private JButton stopButton;
     private JButton backButton;
-    private JPanel panel;
+
     private JLabel labelJamOperasional;
     private JLabel labelBukaTutup;
     private JButton pilihWaktuButton;
     private Customer user;
     private Parkir parkir;
-
+    private JPanel panel;
     public ParkirForm(Customer user){
         add(parkirPanel);
         setSize(700,500);
@@ -86,11 +86,13 @@ public class ParkirForm extends JFrame {
                 Transaksi tr = new Transaksi();
 
                 tr.setArea(park.getArea());
-                tr.setEndTime(getDateTimePickerText());
+                tr.setEndTime(dateFormtoDB());
                 tr.setGarage(park.getGarage());
                 tr.setKendaraan(park.getKendaraan());
                 tr.setStartTime(park.getStartTime());
                 tr.setUser(user);
+
+                System.out.println("debug :"+ tr.setCalculateDuration());
 
                 dispose();
                 ParkirForm p = new ParkirForm(user);

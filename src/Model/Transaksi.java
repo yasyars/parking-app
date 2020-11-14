@@ -1,6 +1,10 @@
 package Model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
 public class Transaksi {
     private int id;
@@ -87,10 +91,42 @@ public class Transaksi {
         this.totalTransaction = totalTransaction;
     }
 
-//    public String setCalculateDuration(){
-//
-//        LocalTime closeHour = LocalTime.parse(this.getCloseHour());
-//        return closeHour;
-//        this.getStartTime()
-//    }
+    public String setCalculateDuration(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+        LocalDateTime startHour = LocalDateTime.parse(this.getStartTime(), formatter);
+        LocalDateTime endHour = LocalDateTime.parse(this.getEndTime(), formatter);
+
+        Period period = getPeriod(startHour, endHour);
+        long time[] = getTime(startHour, endHour);
+
+        System.out.println(period.getYears() + " years " +
+                period.getMonths() + " months " +
+                period.getDays() + " days " +
+                time[0] + " hours " +
+                time[1] + " minutes " +
+                time[2] + " seconds.");
+
+        String drString =  "Debug setcalculate: " +period.toString();
+
+        return  drString;
+    }
+
+    private static Period getPeriod(LocalDateTime dob, LocalDateTime now) {
+        return Period.between(dob.toLocalDate(), now.toLocalDate());
+    }
+
+    private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
+        LocalDateTime today = LocalDateTime.of(now.getYear(),
+                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
+        Duration duration = Duration.between(today, now);
+
+        long seconds = duration.getSeconds();
+
+        long hours = seconds / 60;
+        long minutes = ((seconds % 60) / 3600);
+        long secs = (seconds % 3600);
+
+        return new long[]{hours, minutes, secs};
+    }
 }
