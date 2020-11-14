@@ -2,15 +2,15 @@ package ViewController;
 
 import DAO.DAOKendaraan;
 import DAO.DAOUser;
-import Model.Customer;
-import Model.Kendaraan;
-import Model.TableModelKendaraan;
+import Model.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class KendaraanForm extends JFrame {
@@ -61,20 +61,36 @@ public class KendaraanForm extends JFrame {
         insertButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Kendaraan kendaraan = new Kendaraan();
-
                 String plat_no = platNoField.getText().toUpperCase();
-                try {
-                    kendaraan.setOwner(user);
-                    kendaraan.setTipe(String.valueOf(jenisKendaraanCombo.getSelectedItem()));
-                    kendaraan.setNoPlat(plat_no);
-                    daoKendaraan.insert(kendaraan);
-                    JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
-                    platNoField.setText("");
-                    jenisKendaraanCombo.setSelectedItem(null);
-                    //kosongkan_form();
-                } catch (Exception error) {
-                    JOptionPane.showMessageDialog(null, error.getMessage());
+
+                String className = String.valueOf(jenisKendaraanCombo.getSelectedItem());
+
+                if (String.valueOf(jenisKendaraanCombo.getSelectedItem()) == "Mobil"){
+                    try{
+                        Mobil mo = new Mobil();
+                        mo.setOwner(user);
+                        mo.setNoPlat(plat_no);
+                        daoKendaraan.insert(mo);
+                        JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
+                        platNoField.setText("");
+                        jenisKendaraanCombo.setSelectedItem(null);
+                    } catch (Exception er){
+                        JOptionPane.showMessageDialog(null, er.getMessage());
+                    }
+                } else if (String.valueOf(jenisKendaraanCombo.getSelectedItem()) == "Motor"){
+                    try{
+                        Motor mo = new Motor();
+                        mo.setOwner(user);
+                        mo.setNoPlat(plat_no);
+                        daoKendaraan.insert(mo);
+                        JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
+                        platNoField.setText("");
+                        jenisKendaraanCombo.setSelectedItem(null);
+                    } catch (Exception er){
+                        JOptionPane.showMessageDialog(null, er.getMessage());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Isi jenis kendaraan!");
                 }
                 showData();
             }
@@ -91,9 +107,9 @@ public class KendaraanForm extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Kendaraan kendaraan = new Kendaraan();
+                //Kendaraan kendaraan = new Kendaraan();
 
-                String plat_no = platNoField.getText().replaceAll("\\s", "").toUpperCase();
+                String plat_no = platNoField.getText();//.replaceAll("\\s", "").toUpperCase();
 
                 //System.out.println(plat_no);
                 try{

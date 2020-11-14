@@ -28,6 +28,7 @@ public class RiwayatTransaksiForm extends JFrame{
         add(panelriwayattransaksi);
         setTitle("Aplikasi Parking Subcription");
         setSize(600,450);
+        setLocationRelativeTo(null);
 
         backButton.addActionListener(new ActionListener() {
             @Override

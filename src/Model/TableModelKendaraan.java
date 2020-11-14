@@ -39,7 +39,7 @@ public class TableModelKendaraan extends AbstractTableModel{
             case 0:
                 return listOfKendaraan.get(rowIndex).getNoPlat();
             case 1:
-                return listOfKendaraan.get(rowIndex).getTipe();
+                return listOfKendaraan.get(rowIndex).getClass().getSimpleName();
             default:
                 return null;
         }
