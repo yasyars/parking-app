@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="LGoodDatePicker-11.1.0">
     <CLASSES>
-      <root url="jar://C:/LGoodDatePicker-11.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../LGoodDatePicker-11.1.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

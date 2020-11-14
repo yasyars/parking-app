@@ -307,8 +307,16 @@ public class ParkirForm extends JFrame {
         JTextField timeField = this.dateTimePicker.getTimePicker().getComponentTimeTextField();
 
         String str = dateField.getText() +" "+ timeField.getText().toUpperCase();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
-        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+
+        LocalDateTime dateTime;
+        try{
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
+            dateTime = LocalDateTime.parse(str, formatter);
+        }catch(Exception e){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
+            dateTime = LocalDateTime.parse(str, formatter);
+        }
 
         String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"));
 
