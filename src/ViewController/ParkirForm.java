@@ -3,6 +3,8 @@ package ViewController;
 import DAO.*;
 import Model.*;
 import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.optionalusertools.DateTimeChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateTimeChangeEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -29,14 +31,13 @@ public class ParkirForm extends JFrame {
 
     private JLabel labelJamOperasional;
     private JLabel labelBukaTutup;
-    private JButton pilihWaktuButton;
     private Customer user;
     private Parkir parkir;
     private JPanel panel;
 
     public ParkirForm(Customer user){
         add(parkirPanel);
-        setSize(700,500);
+        setSize(500,500);
         setLocationRelativeTo(null);
         this.user = user;
         parkir = new Parkir();
@@ -53,12 +54,14 @@ public class ParkirForm extends JFrame {
             disableAllforStart();
         }
 
-        pilihWaktuButton.addActionListener(new ActionListener() {
+        dateTimePicker.addDateTimeChangeListener(new DateTimeChangeListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void dateOrTimeChanged(DateTimeChangeEvent dateTimeChangeEvent) {
+                updateLabel();
                 setLabelBukaTutup();
             }
         });
+
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -193,10 +196,7 @@ public class ParkirForm extends JFrame {
         String timeNow = dt.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
         timeField.setText(timeNow);
 
-
-
     }
-
 
     private void loadArea(){
 
@@ -298,7 +298,6 @@ public class ParkirForm extends JFrame {
                 disableStartButton();
             }
         }
-
     }
 
     private String dateFormtoDB(){
@@ -329,4 +328,29 @@ public class ParkirForm extends JFrame {
     private void createUIComponents() {
         // TODO: place custom component creation code here
     }
+
+//    private static class SampleDateTimeChangeListener implements DateTimeChangeListener {
+//
+//        /**
+//         * dateTimePickerName, This holds a chosen name for the component that we are listening to,
+//         * for generating time change messages in the demo.
+//         */
+//        public String dateTimePickerName;
+//
+//        /**
+//         * Constructor.
+//         */
+//        private SampleDateTimeChangeListener(String dateTimePickerName) {
+//            this.dateTimePickerName = dateTimePickerName;
+//        }
+//
+//        /**
+//         * dateOrTimeChanged, This function will be called whenever the in date or time in the
+//         * applicable DateTimePicker has changed.
+//         */
+//        @Override
+//        public void dateOrTimeChanged(DateTimeChangeEvent event) {
+//           this.upda
+//        }
+//    }
 }
