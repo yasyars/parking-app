@@ -47,7 +47,6 @@ public class UserForm extends JFrame{
                 MenuUser mu = new MenuUser(user);
                 dispose();
                 mu.setVisible(true);
-                mu.setMailLabel(getEmail());
                 mu.setLocationRelativeTo(null);
                 nama.setEditable(false);
                 alamat.setEditable(false);

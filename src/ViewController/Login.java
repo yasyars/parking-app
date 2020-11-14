@@ -64,7 +64,6 @@ public class Login extends JFrame{
                         MenuUser mu = new MenuUser(customer);
                         dispose();
                         mu.setVisible(true);
-                        mu.setMailLabel(mail);
                         mu.setLocationRelativeTo(null);
                     }
 

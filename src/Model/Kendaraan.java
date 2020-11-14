@@ -21,6 +21,8 @@ public interface Kendaraan {
 
     public String toString();
 
+    public double getGaragePrice(Garage garage);
+
 
 }
 

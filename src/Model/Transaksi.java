@@ -1,9 +1,6 @@
 package Model;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class Transaksi {
@@ -14,8 +11,9 @@ public class Transaksi {
     private Garage garage;
     private String startTime;
     private String endTime;
-    private String duration;
+    private int duration;
     private double totalTransaction;
+    private boolean isFirstinMonth=false;
 
     public Transaksi(){};
 
@@ -75,11 +73,19 @@ public class Transaksi {
         this.endTime = endTime;
     }
 
-    public String getDuration() {
+    public void setFirstinMonth(boolean bool){
+        this.isFirstinMonth = bool;
+    }
+
+    public boolean getFirstInMonth(){
+        return this.isFirstinMonth;
+    }
+
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -91,42 +97,53 @@ public class Transaksi {
         this.totalTransaction = totalTransaction;
     }
 
-    public String setCalculateDuration(){
+    public LocalDateTime getStartLocalTime(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
         LocalDateTime startHour = LocalDateTime.parse(this.getStartTime(), formatter);
+
+        return startHour;
+    }
+
+    public LocalDateTime getEndLocalTime(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime endHour = LocalDateTime.parse(this.getEndTime(), formatter);
 
-        Period period = getPeriod(startHour, endHour);
-        long time[] = getTime(startHour, endHour);
-
-        System.out.println(period.getYears() + " years " +
-                period.getMonths() + " months " +
-                period.getDays() + " days " +
-                time[0] + " hours " +
-                time[1] + " minutes " +
-                time[2] + " seconds.");
-
-        String drString =  "Debug setcalculate: " +period.toString();
-
-        return  drString;
+        return endHour;
     }
 
-    private static Period getPeriod(LocalDateTime dob, LocalDateTime now) {
-        return Period.between(dob.toLocalDate(), now.toLocalDate());
+    public void setCalculateDuration(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime startHour = LocalDateTime.parse(this.getStartTime(), formatter);
+        LocalDateTime endHour = LocalDateTime.parse(this.getEndTime(), formatter);
+        long milliStart = startHour.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long milliEnd = endHour.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        int dur = (int) Math.ceil( (double)(milliEnd - milliStart) / 3600000);
+
+        System.out.println("Debug Transaksi set calculation: "+(milliEnd));
+        System.out.println("Debug Transaksi set calculation: "+(milliStart));
+
+        System.out.println("Debug Transaksi set calculation: "+(dur));
+        this.setDuration(dur);
     }
 
-    private static long[] getTime(LocalDateTime dob, LocalDateTime now) {
-        LocalDateTime today = LocalDateTime.of(now.getYear(),
-                now.getMonthValue(), now.getDayOfMonth(), dob.getHour(), dob.getMinute(), dob.getSecond());
-        Duration duration = Duration.between(today, now);
+    public void setCalculateTotalPrice(){
+        if (user.getSubscription().equals("Easy")){
+            double costSubs = 2000;
+            double totalGaragePrice = this.getDuration() * this.kendaraan.getGaragePrice(this.garage);
+            System.out.println("getduration: "+this.getDuration() );
+            System.out.println("kendaraangarageprice: "+ this.kendaraan.getGaragePrice(this.garage) );
+            this.setTotalTransaction(totalGaragePrice + costSubs);
+        }else{
+            double monthlySubs = 12000;
+            double totalGaragePrice = this.getDuration()* this.kendaraan.getGaragePrice(this.garage);
+            if (this.isFirstinMonth){
+                 this.setTotalTransaction(totalGaragePrice + monthlySubs);
+            }else{
+                this.setTotalTransaction(totalGaragePrice);
+            }
 
-        long seconds = duration.getSeconds();
-
-        long hours = seconds / 60;
-        long minutes = ((seconds % 60) / 3600);
-        long secs = (seconds % 3600);
-
-        return new long[]{hours, minutes, secs};
+        }
     }
 }

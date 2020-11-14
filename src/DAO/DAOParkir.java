@@ -5,15 +5,13 @@ import Model.*;
 
 import java.awt.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DAOParkir {
     Connection CONN =DbConnection.getConnection();
     private final String readQuery = "SELECT * FROM parkir";
     private final String getByUserQuery = "SELECT * FROM parkir WHERE id_user = ?";
     private final String parkQuery = "INSERT INTO parkir (id_user,id_area,id_garage, plat_no, waktu_masuk) values (?,?,?,?,?)";
-    private final String unparkQuery = "DELETE FROM parkir WHERE id_user = ?";
+    private final String deleteQuery = "DELETE FROM parkir WHERE id_user = ?";
 
     public DAOParkir(){};
 
@@ -45,11 +43,11 @@ public class DAOParkir {
         }
     }
 
-    public void unpark(Parkir parkir){
+    public void delete(Parkir parkir){
         PreparedStatement stm = null;
         DAOKendaraan daoKendaraan = new DAOKendaraan();
         try{
-            stm = CONN.prepareStatement(unparkQuery);
+            stm = CONN.prepareStatement(deleteQuery);
             stm.setInt(1,parkir.getUser().getId());
             stm.execute();
             parkir.getKendaraan().setIsParked(0);
@@ -109,8 +107,6 @@ public class DAOParkir {
         }
 
         return parkir;
-
-
     }
 
 }

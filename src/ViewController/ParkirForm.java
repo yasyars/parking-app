@@ -33,6 +33,8 @@ public class ParkirForm extends JFrame {
     private JLabel labelBukaTutup;
     private Customer user;
     private Parkir parkir;
+    private int isStarted;
+    private int garageOpen;
     private JPanel panel;
 
     public ParkirForm(Customer user){
@@ -42,7 +44,7 @@ public class ParkirForm extends JFrame {
         this.user = user;
         parkir = new Parkir();
         parkir.setUser(user);
-
+        this.isStarted = 0;
         loadData();
 
         disableStopButton();
@@ -52,16 +54,27 @@ public class ParkirForm extends JFrame {
 
         if (daoParkir.getByUser(user) != null){
             disableAllforStart();
+            parkir = daoParkir.getByUser(user) ;
         }
 
         dateTimePicker.addDateTimeChangeListener(new DateTimeChangeListener() {
             @Override
             public void dateOrTimeChanged(DateTimeChangeEvent dateTimeChangeEvent) {
-                updateLabel();
-                setLabelBukaTutup();
+                if (isStarted==0) {
+                    updateLabel();
+                    setLabelBukaTutup();
+                }else{
+                    setLabelBukaTutup();
+                    disableStartButton();
+                    if (garageOpen == 0){
+                        disableStopButton();
+                    }else{
+                        enableStopButton();
+                    }
+                }
+
             }
         });
-
 
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -76,50 +89,100 @@ public class ParkirForm extends JFrame {
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Parkir park = daoParkir.getByUser(user) ;
-                daoParkir.unpark(park);
-
-                System.out.println("Debug Parkir Form 1: "+ park.getStartTime());
+                int cmp = parkir.compareStopParkingTime(getDateTimePickerLocalDateTime());
                 DAOTransaksi daoTransaksi = new DAOTransaksi();
+                List<Transaksi> allTransaksi = daoTransaksi.getByUser(user);
+
+                System.out.println("Debug ParkirForm stopbutton:" + cmp);
                 Transaksi tr = new Transaksi();
 
-                tr.setArea(park.getArea());
-                tr.setEndTime(dateFormtoDB());
-                tr.setGarage(park.getGarage());
-                tr.setKendaraan(park.getKendaraan());
-                tr.setStartTime(park.getStartTime());
-                tr.setUser(user);
+                if (allTransaksi.size() == 0){
+                    tr.setFirstinMonth(true);
+                }else{
+                    tr.setFirstinMonth(false);
+                }
 
-                System.out.println("debug :"+ tr.setCalculateDuration());
+                if (cmp>0 ){
+                    daoParkir.delete(parkir);
 
-                dispose();
-                ParkirForm p = new ParkirForm(user);
-                p.setVisible(true);
-                p.setLocationRelativeTo(null);
+                    tr.setArea(parkir.getArea());
+                    tr.setEndTime(dateFormtoDB());
+                    tr.setGarage(parkir.getGarage());
+                    tr.setKendaraan(parkir.getKendaraan());
+                    tr.setStartTime(parkir.getStartTime());
+                    tr.setUser(user);
+                    tr.setCalculateDuration();
+                    tr.setCalculateTotalPrice();
 
+                    daoTransaksi.insert(tr);
+                    JOptionPane.showMessageDialog(null,"Riwayat parkir telah disimpan\nWaktu transaksi keluar: " + tr.getEndTime());
+
+                    dispose();
+                    ParkirForm p = new ParkirForm(user);
+                    p.setVisible(true);
+                    p.setLocationRelativeTo(null);
+
+                }else if (cmp==0){
+                    daoParkir.delete(parkir);
+                    JOptionPane.showMessageDialog(null,"Anda batal parkir");
+                    dispose();
+                    ParkirForm p = new ParkirForm(user);
+                    p.setVisible(true);
+                    p.setLocationRelativeTo(null);
+
+                }else{
+                    JOptionPane.showMessageDialog(null,"Waktu dan tanggal yang dipilih harus setelah \nwaktu masuk di hari operasional yang sama");
+                }
+
+                System.out.println("Debug Parkir Form 1: "+ parkir.getStartTime());
             }
         });
 
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                DAOTransaksi daoTransaksi = new DAOTransaksi();
+                List<Transaksi> allTransaksi = daoTransaksi.getByUser(user);
                 parkir.setStartTime(dateFormtoDB());
                 parkir.setArea((Area)cmbArea.getSelectedItem());
                 parkir.setKendaraan((Kendaraan)cmbKendaraan.getSelectedItem());
                 parkir.setGarage((Garage)cmbGarage.getSelectedItem());
 
-                if (parkir.getGarage().getOperationalTime().isOpen(getDateTimePickerText())){
-                    parkir.setUser(user);
-                    daoParkir.park(parkir);
+                if (allTransaksi.size()!=0){
+                    Transaksi lastTransaction = allTransaksi.get(allTransaksi.size()-1);
+                    int cmp = lastTransaction.getEndLocalTime().compareTo(getDateTimePickerLocalDateTime());
 
-                    disableAllforStart();
-                    loadTable();
-                    labelBukaTutup.setText("");
+                    if (cmp<0 && parkir.getGarage().getOperationalTime().isOpen(getDateTimePickerText())){
+                        parkir.setUser(user);
+                        daoParkir.park(parkir);
 
+                        disableAllforStart();
+                        loadTable();
+                        isStarted = 1;
+
+                    }else if (cmp>=0) {
+                        JOptionPane.showMessageDialog(null,"Waktu yang dipilih harus lebih besar dari waktu keluar transaksi terakhir!\nWaktu terakhir: "+lastTransaction.getEndLocalTime());
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Garage tutup di waktu yang dipilih");
+                        updateLabel();
+                    }
                 }else{
-                    JOptionPane.showMessageDialog(null,"Garage tutup di waktu yang dipilih");
-                    updateLabel();
+
+                    if (parkir.getGarage().getOperationalTime().isOpen(getDateTimePickerText())){
+                        parkir.setUser(user);
+                        daoParkir.park(parkir);
+
+                        disableAllforStart();
+                        loadTable();
+                        isStarted = 1;
+
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Garage tutup di waktu yang dipilih");
+                        updateLabel();
+                    }
                 }
+
             }
         });
 
@@ -176,12 +239,6 @@ public class ParkirForm extends JFrame {
             OperationalTime opTime = ((Garage) cmbGarage.getSelectedItem()).getOperationalTime();
             labelJamOperasional.setText(
                     "Jam Operasional: " + (opTime.getDay() + ", " + opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
-
-
-            if (!opTime.isOpen(this.getDateTimePickerText())){
-                disableStartButton();
-                setLabelBukaTutup();
-            }
         }
 
     }
@@ -190,11 +247,29 @@ public class ParkirForm extends JFrame {
 
         JTextField dateField = dateTimePicker.getDatePicker().getComponentDateTextField();
         JTextField timeField = dateTimePicker.getTimePicker().getComponentTimeTextField();
-        LocalDateTime dt = LocalDateTime.now();
-        String dateNow =  DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(dt);
-        dateField.setText(dateNow);
-        String timeNow = dt.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
-        timeField.setText(timeNow);
+
+        DAOTransaksi daoTransaksi = new DAOTransaksi();
+        List<Transaksi> allTransaksi = daoTransaksi.getByUser(user);
+
+        if (allTransaksi.size() != 0){
+            Transaksi lastTransaction = allTransaksi.get(allTransaksi.size()-1);
+
+            LocalDateTime last = lastTransaction.getEndLocalTime();
+            String dateNow =  DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(last);
+            dateField.setText(dateNow);
+            String timeNow = last.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
+            timeField.setText(timeNow);
+
+        }else{
+            LocalDateTime dt = LocalDateTime.now();
+            String dateNow =  DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).format(dt);
+            dateField.setText(dateNow);
+            String timeNow = dt.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
+            timeField.setText(timeNow);
+        }
+
+
+
 
     }
 
@@ -265,6 +340,7 @@ public class ParkirForm extends JFrame {
         cmbArea.setEnabled(false);
         cmbGarage.setEnabled(false);
         cmbKendaraan.setEnabled(false);
+        this.isStarted = 1;
     }
 
     private void enableAllforStart(){
@@ -284,18 +360,36 @@ public class ParkirForm extends JFrame {
         return str;
     }
 
+    private LocalDateTime getDateTimePickerLocalDateTime(){
+        String dateTime = this.getDateTimePickerText();
+        LocalDateTime localDateTime;
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
+            localDateTime = LocalDateTime.parse(dateTime, formatter);
+        }catch(Exception e){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
+            localDateTime = LocalDateTime.parse(dateTime, formatter);
+        }
+
+        return localDateTime;
+
+    }
+
     private void setLabelBukaTutup(){
         if (cmbKendaraan.getItemCount()==0 || cmbArea.getItemCount()==0 || cmbGarage.getItemCount()==0) {
             disableStartButton();
+            labelBukaTutup.setText("");
         }else{
             if (((Garage)cmbGarage.getSelectedItem()).getOperationalTime().isOpen( getDateTimePickerText())) {
                 labelBukaTutup.setText("Garage Buka");
                 labelBukaTutup.setForeground(Color.BLUE);
                 enableStartButton();
+                this.garageOpen = 1;
             }else{
                 labelBukaTutup.setText("Garage Tutup");
                 labelBukaTutup.setForeground(Color.RED);
                 disableStartButton();
+                this.garageOpen = 0;
             }
         }
     }
@@ -329,28 +423,4 @@ public class ParkirForm extends JFrame {
         // TODO: place custom component creation code here
     }
 
-//    private static class SampleDateTimeChangeListener implements DateTimeChangeListener {
-//
-//        /**
-//         * dateTimePickerName, This holds a chosen name for the component that we are listening to,
-//         * for generating time change messages in the demo.
-//         */
-//        public String dateTimePickerName;
-//
-//        /**
-//         * Constructor.
-//         */
-//        private SampleDateTimeChangeListener(String dateTimePickerName) {
-//            this.dateTimePickerName = dateTimePickerName;
-//        }
-//
-//        /**
-//         * dateOrTimeChanged, This function will be called whenever the in date or time in the
-//         * applicable DateTimePicker has changed.
-//         */
-//        @Override
-//        public void dateOrTimeChanged(DateTimeChangeEvent event) {
-//           this.upda
-//        }
-//    }
 }

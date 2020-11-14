@@ -26,6 +26,7 @@ public class MenuUser extends JFrame{
 
     public MenuUser(Customer user){
         this.user = user;
+        setMailLabel();
        add(mainUserPanel);
        setTitle("Aplikasi Parking Subcription");
        setSize(500,500);
@@ -81,7 +82,7 @@ public class MenuUser extends JFrame{
         });
     }
 
-    public void setMailLabel(String mail) {
+    public void setMailLabel() {
         this.mailField.setText(user.getEmail());
     }
 

@@ -62,4 +62,9 @@ public class Motor implements Kendaraan{
         return this.getClass().getSimpleName() + " - " + this.getNoPlat();
     }
 
+    @Override
+    public double getGaragePrice(Garage garage) {
+        return garage.getTarifMotor();
+    }
+
 }

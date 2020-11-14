@@ -1,5 +1,9 @@
 package Model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Parkir {
     private int id;
     private Kendaraan kendaraan;
@@ -57,5 +61,27 @@ public class Parkir {
     public void setStartTime(String startTime) {
 
         this.startTime = startTime;
+    }
+
+    public LocalDateTime getStartLocalTime(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startHour = LocalDateTime.parse(this.getStartTime(), formatter);
+
+        return startHour;
+    }
+
+    public int compareStopParkingTime(LocalDateTime dt){
+
+        int cmpDateTime = dt.toLocalTime().compareTo(this.getStartLocalTime().toLocalTime());
+        int cmpDate = dt.toLocalDate().compareTo(this.getStartLocalTime().toLocalDate());
+
+        if (cmpDate==0 && cmpDateTime> 0){
+            return 1;
+        }else if (cmpDate==0 && cmpDateTime==0){
+            return 0;
+        }else{
+            return -1;
+        }
+
     }
 }
