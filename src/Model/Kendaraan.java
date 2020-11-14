@@ -19,10 +19,7 @@ public interface Kendaraan {
 
     public boolean isPlatNoValid(String plat_no);
 
-//    public String toString();
-//    {
-//        return this.getTipe() + " - " + this.getNoPlat();
-//    }
+    public String toString();
 
 
 }

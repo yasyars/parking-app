@@ -56,4 +56,10 @@ public class Motor implements Kendaraan{
         Pattern p = Pattern.compile(regex);
         return p.matcher(plat_no).matches();
     }
+
+    public String toString()
+    {
+        return this.getClass().getSimpleName() + " - " + this.getNoPlat();
+    }
+
 }
