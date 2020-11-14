@@ -39,6 +39,29 @@ public class RiwayatTransaksiForm extends JFrame{
                 mu.setLocationRelativeTo(null);
             }
         });
+        cbJenis.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (cbJenis.getSelectedItem().equals("Mingguan") ||  cbJenis.getSelectedItem().equals("Bulanan")){
+                    cbDate.removeAllItems();
+                    cbDate.addItem("Juli");
+                    cbDate.addItem("Agustus");
+                    cbDate.addItem("September");
+                    cbDate.addItem("Oktober");
+                    cbDate.addItem("November");
+                    cbDate.addItem("Desember");
+                } else {
+                    cbDate.removeAllItems();
+                    cbDate.addItem("Senin");
+                    cbDate.addItem("Selasa");
+                    cbDate.addItem("Rabu");
+                    cbDate.addItem("Kamis");
+                    cbDate.addItem("Jumat");
+                    cbDate.addItem("Sabtu");
+                    cbDate.addItem("Minggu");
+                }
+            }
+        });
     }
 
 

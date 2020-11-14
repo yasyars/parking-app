@@ -21,7 +21,7 @@ public class TableModelTransaksiAdmin extends AbstractTableModel{
             case 0:
                 return "Nama Pengguna";
             case 1:
-                return "area";
+                return "Area";
             case 2:
                 return "Garage";
             case 3:
