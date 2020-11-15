@@ -1,5 +1,7 @@
 package Model;
 
+import com.github.lgooddatepicker.components.DateTimePicker;
+
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,19 +28,22 @@ public class OperationalTime {
         return openHour;
     }
 
-    public Boolean isOpen(String dateTime){
+    public Boolean isOpen(DateTimePicker dateTimePicker){
         //string dalam bentuk format form
 
-        LocalDateTime localDateTime;
-        try{
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
-            localDateTime = LocalDateTime.parse(dateTime, formatter);
-        }catch(Exception e){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
-            localDateTime = LocalDateTime.parse(dateTime, formatter);
-        }
+        LocalDate dateLocal= dateTimePicker.datePicker.getDate();
+        LocalTime timeLocal= dateTimePicker.timePicker.getTime();
 
+        LocalDateTime localDateTime = LocalDateTime.of(dateLocal,timeLocal);
+//
+//        try{
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
+//            dateTime = LocalDateTime.parse(str, formatter);
+//        }catch(Exception e){
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
+//            dateTime = LocalDateTime.parse(str, formatter);
+//        }
 
         int startCompare = localDateTime.toLocalTime().compareTo(this.getOpenHourTime());
         int endCompare = localDateTime.toLocalTime().compareTo(this.getCloseHourTime());

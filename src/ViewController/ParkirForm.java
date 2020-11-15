@@ -11,7 +11,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -50,8 +52,7 @@ public class ParkirForm extends JFrame {
         disableStopButton();
         DAOParkir daoParkir = new DAOParkir();
 
-        setLabelBukaTutup();
-
+        updateLabel();
         if (daoParkir.getByUser(user) != null){
             disableAllforStart();
             parkir = daoParkir.getByUser(user) ;
@@ -62,9 +63,8 @@ public class ParkirForm extends JFrame {
             public void dateOrTimeChanged(DateTimeChangeEvent dateTimeChangeEvent) {
                 if (isStarted==0) {
                     updateLabel();
-                    setLabelBukaTutup();
                 }else{
-                    setLabelBukaTutup();
+                    updateLabel();
                     disableStartButton();
                     if (garageOpen == 0){
                         disableStopButton();
@@ -151,7 +151,7 @@ public class ParkirForm extends JFrame {
                     Transaksi lastTransaction = allTransaksi.get(allTransaksi.size()-1);
                     int cmp = lastTransaction.getEndLocalTime().compareTo(getDateTimePickerLocalDateTime());
 
-                    if (cmp<0 && parkir.getGarage().getOperationalTime().isOpen(getDateTimePickerText())){
+                    if (cmp<0 && parkir.getGarage().getOperationalTime().isOpen(dateTimePicker)){
                         parkir.setUser(user);
                         daoParkir.park(parkir);
 
@@ -167,7 +167,7 @@ public class ParkirForm extends JFrame {
                     }
                 }else{
 
-                    if (parkir.getGarage().getOperationalTime().isOpen(getDateTimePickerText())){
+                    if (parkir.getGarage().getOperationalTime().isOpen(dateTimePicker)){
                         parkir.setUser(user);
                         daoParkir.park(parkir);
 
@@ -233,10 +233,13 @@ public class ParkirForm extends JFrame {
 
     public void updateLabel(){
         labelJamOperasional.setText("Jam Operasional: -");
+        labelBukaTutup.setText("");
+
         if (cmbGarage.getItemCount()!=0) {
             OperationalTime opTime = ((Garage) cmbGarage.getSelectedItem()).getOperationalTime();
             labelJamOperasional.setText(
                     "Jam Operasional: " + (opTime.getDay() + ", " + opTime.getOpenHourTime() + " - " + opTime.getCloseHourTime()));
+            setLabelBukaTutup();
         }
 
     }
@@ -314,8 +317,6 @@ public class ParkirForm extends JFrame {
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Fail to load Garage Data!","Fail load data",2);
         }
-
-
     }
 
     private void enableStartButton(){
@@ -359,17 +360,12 @@ public class ParkirForm extends JFrame {
     }
 
     private LocalDateTime getDateTimePickerLocalDateTime(){
-        String dateTime = this.getDateTimePickerText();
-        LocalDateTime localDateTime;
-        try{
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
-            localDateTime = LocalDateTime.parse(dateTime, formatter);
-        }catch(Exception e){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
-            localDateTime = LocalDateTime.parse(dateTime, formatter);
-        }
+        LocalDate dateLocal= dateTimePicker.datePicker.getDate();
+        LocalTime timeLocal= dateTimePicker.timePicker.getTime();
 
-        return localDateTime;
+        LocalDateTime dateTime = LocalDateTime.of(dateLocal,timeLocal);
+
+        return dateTime;
 
     }
 
@@ -378,7 +374,7 @@ public class ParkirForm extends JFrame {
             disableStartButton();
             labelBukaTutup.setText("");
         }else{
-            if (((Garage)cmbGarage.getSelectedItem()).getOperationalTime().isOpen( getDateTimePickerText())) {
+            if (((Garage)cmbGarage.getSelectedItem()).getOperationalTime().isOpen(dateTimePicker)) {
                 labelBukaTutup.setText("Garage Buka");
                 labelBukaTutup.setForeground(Color.BLUE);
                 enableStartButton();
@@ -394,26 +390,26 @@ public class ParkirForm extends JFrame {
 
     private String dateFormtoDB(){
 
-        JTextField dateField = this.dateTimePicker.getDatePicker().getComponentDateTextField();
-        JTextField timeField = this.dateTimePicker.getTimePicker().getComponentTimeTextField();
+//        JTextField dateField = this.dateTimePicker.getDatePicker().getComponentDateTextField();
+//        JTextField timeField = this.dateTimePicker.getTimePicker().getComponentTimeTextField();
+//
+//        String str = dateField.getText() +" "+ timeField.getText().toUpperCase();
 
-        String str = dateField.getText() +" "+ timeField.getText().toUpperCase();
+        LocalDate dateLocal= dateTimePicker.datePicker.getDate();
+        LocalTime timeLocal= dateTimePicker.timePicker.getTime();
 
-        LocalDateTime dateTime;
-        try{
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
-            dateTime = LocalDateTime.parse(str, formatter);
-        }catch(Exception e){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
-            dateTime = LocalDateTime.parse(str, formatter);
-        }
+        LocalDateTime dateTime = LocalDateTime.of(dateLocal,timeLocal);
+//
+//        try{
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
+//            dateTime = LocalDateTime.parse(str, formatter);
+//        }catch(Exception e){
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
+//            dateTime = LocalDateTime.parse(str, formatter);
+//        }
 
         String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"));
 
-//        System.out.println("Debug: \n" + "Day: " +
-//                dateTime.format(DateTimeFormatter.ofPattern("EEEE"))+
-//                "\nTime: " + dateTime.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         return formattedDateTime;
     }
 
