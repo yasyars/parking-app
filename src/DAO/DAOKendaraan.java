@@ -37,23 +37,25 @@ public class DAOKendaraan {
             ResultSet res = stm.executeQuery(readQuery);
 
             while (res.next()) {
-                if (res.getString(2).equals("Mobil")){
+                if (res.getString(2).equals("Mobil")) {
                     Mobil mo = new Mobil();
                     mo.setNoPlat(res.getString(1));
 
                     try {
                         DAOCustomer daoUser = new DAOCustomer();
                         mo.setOwner(daoUser.get(res.getInt(3)));
-                    } catch (Exception error){ }
+                    } catch (Exception error) {
+                    }
                     lk.add(mo);
-                } else if (res.getString(2).equals("Motor")){
+                } else if (res.getString(2).equals("Motor")) {
                     Motor mo = new Motor();
                     mo.setNoPlat(res.getString(1));
                     DAOCustomer daoUser = new DAOCustomer();
                     try {
                         mo.setOwner(daoUser.get(res.getInt(3)));
                         lk.add(mo);
-                    } catch (Exception error){ }
+                    } catch (Exception error) {
+                    }
                     lk.add(mo);
                 }
             }
@@ -134,11 +136,14 @@ public class DAOKendaraan {
             stm.setInt(1, user.getId());
 
             ResultSet res = stm.executeQuery();
-            System.out.println("Debug stm: "+ stm);
+            System.out.println("Debug stm: " + stm);
 
             while (res.next()) {
+                //Kendaraan kendaraan = new Kendaraan();
+
                 if (res.getString("tipe_kendaraan").equals("Mobil")) {
                     Mobil mo = new Mobil();
+                    //kendaraan.setTipe(res.getString("tipe_kendaraan"));
                     mo.setIsParked(res.getInt("is_parked"));
                     mo.setOwner(user);
                     try {
@@ -166,11 +171,11 @@ public class DAOKendaraan {
         return lg;
     }
 
-    public Kendaraan getByPlat(String plat) throws Exception{
+    public Kendaraan getByPlat(String plat) throws Exception {
         PreparedStatement stm = null;
         //Kendaraan kendaraan = new Kendaraan();
 
-        try{
+        try {
             stm = CONN.prepareStatement(getByPlat);
             stm.setString(1, plat);
             ResultSet res = stm.executeQuery();
@@ -188,7 +193,7 @@ public class DAOKendaraan {
                     throw new Exception("Error DAOKendaraan 6: " + e);
                 }
                 return mo;
-            } else{
+            } else {
                 Motor mo = new Motor();
                 mo.setIsParked(res.getInt("is_parked"));
                 mo.setOwner(daoCustomer.getById(res.getInt("id_user")));
@@ -199,13 +204,13 @@ public class DAOKendaraan {
                 }
                 return mo;
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new Exception("Error DAOKendaraan 7: " + e);
         }
     }
 
     public List<Kendaraan> getByUser(Customer user) throws Exception {
-        List<Kendaraan> lg = new ArrayList<>();
+        List<Kendaraan> lg = new ArrayList<Kendaraan>();
         PreparedStatement stm = null;
 
         try {
@@ -215,12 +220,11 @@ public class DAOKendaraan {
             ResultSet res = stm.executeQuery();
 
             while (res.next()) {
-                //Kendaraan kendaraan = new Kendaraan();
+
                 if (res.getString("tipe_kendaraan").equals("Mobil")) {
                     try {
                         Mobil mo = new Mobil();
                         mo.setNoPlat(res.getString("plat_no"));
-                        //kendaraan.setTipe(res.getString("tipe_kendaraan"));
                         mo.setIsParked(res.getInt("is_parked"));
                         mo.setOwner(user);
                         lg.add(mo);
@@ -245,6 +249,7 @@ public class DAOKendaraan {
 
         return lg;
     }
+
 
 
     public <T extends Kendaraan> void setIsParked(T t) throws Exception{
