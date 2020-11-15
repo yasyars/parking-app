@@ -290,7 +290,7 @@ public class ParkirForm extends JFrame {
     private void loadKendaraan(){
         try{
             DAOKendaraan daoKendaraan = new DAOKendaraan();
-            List<Kendaraan> kendaraans =  daoKendaraan.getUnparkedKendaraanByUser(this.user);
+            List<Kendaraan> kendaraans =  daoKendaraan.getByUser(this.user);
             for (Kendaraan kendaraan: kendaraans){
                 cmbKendaraan.addItem(kendaraan);
             }
