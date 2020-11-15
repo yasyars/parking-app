@@ -37,7 +37,7 @@ public class KendaraanForm extends JFrame {
 
     public KendaraanForm(Customer user) {
         DAOKendaraan daoKendaraan = new DAOKendaraan();
-        showData();
+        showData(user);
 
         add(panelKendaraan);
         setTitle("Aplikasi Parking Subcription");
@@ -92,7 +92,7 @@ public class KendaraanForm extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Isi jenis kendaraan!");
                 }
-                showData();
+                showData(user);
             }
         });
         backButton.addActionListener(new ActionListener() {
@@ -124,14 +124,14 @@ public class KendaraanForm extends JFrame {
                 } catch (Exception error) {
                     JOptionPane.showMessageDialog(null, error.getMessage());
                 }
-                showData();
+                showData(user);
             }
         });
     }
-    public void showData() {
+    public void showData(Customer user) {
         DAOKendaraan daoKendaraan = new DAOKendaraan();
         try {
-            TableModelKendaraan model = new TableModelKendaraan(daoKendaraan.getAll());
+            TableModelKendaraan model = new TableModelKendaraan(daoKendaraan.getByUser(user));
             tableKendaraan.setModel(model);
         } catch (Exception e){
             JOptionPane.showMessageDialog(null, e.getMessage());
