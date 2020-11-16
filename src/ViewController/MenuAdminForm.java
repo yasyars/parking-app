@@ -1,7 +1,5 @@
 package ViewController;
 
-import Model.User;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +39,7 @@ public class MenuAdminForm extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                RiwayatTransaksiForm r = new RiwayatTransaksiForm();
+                LaporanTransaksiForm r = new LaporanTransaksiForm();
                 r.setVisible(true);
             }
         });

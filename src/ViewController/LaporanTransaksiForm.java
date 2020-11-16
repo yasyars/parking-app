@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class RiwayatTransaksiForm extends JFrame{
+public class LaporanTransaksiForm extends JFrame{
     private JTable TabelTransaksiAdmin;
     private JLabel jenisLabel;
     private JLabel dateLabel;
@@ -15,6 +15,7 @@ public class RiwayatTransaksiForm extends JFrame{
     private JButton backButton;
     private JComboBox cbJenis;
     private JComboBox cbDate;
+    private JLabel labelTotal;
 
     public void tampilkan_data() {
         DAOTransaksi daoTransaksi = new DAOTransaksi();
@@ -22,7 +23,7 @@ public class RiwayatTransaksiForm extends JFrame{
         TabelTransaksiAdmin.setModel(model);
     }
 
-    public RiwayatTransaksiForm(){
+    public LaporanTransaksiForm(){
         DAOTransaksi daoTransaksi = new DAOTransaksi();
         tampilkan_data();
         add(panelriwayattransaksi);
