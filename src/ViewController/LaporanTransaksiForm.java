@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 public class LaporanTransaksiForm extends JFrame{
     private JTable TabelTransaksiAdmin;
     private JLabel jenisLabel;
-    private JLabel dateLabel;
     private JPanel panelriwayattransaksi;
     private JButton backButton;
     private JComboBox cbJenis;
@@ -28,7 +27,7 @@ public class LaporanTransaksiForm extends JFrame{
         tampilkan_data();
         add(panelriwayattransaksi);
         setTitle("Aplikasi Parking Subcription");
-        setSize(600,450);
+        setSize(900,700);
         setLocationRelativeTo(null);
 
         backButton.addActionListener(new ActionListener() {
@@ -64,6 +63,5 @@ public class LaporanTransaksiForm extends JFrame{
             }
         });
     }
-
 
 }
