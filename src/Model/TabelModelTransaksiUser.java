@@ -9,16 +9,13 @@ public class TabelModelTransaksiUser extends AbstractTableModel {
         this.listOfTuser = listOfTusaer;
     }
 
-
     public int getRowCount() {
         return this.listOfTuser.size();
     }
 
-
     public int getColumnCount() {
         return 6;
     }
-
 
     public String getColumnName(int column) {
         switch (column){

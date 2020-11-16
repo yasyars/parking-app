@@ -207,8 +207,6 @@ public class ParkirForm extends JFrame {
                 }
             }
         });
-
-
     }
 
     public void loadData(){
@@ -220,8 +218,8 @@ public class ParkirForm extends JFrame {
         if (cmbArea.getItemCount()!=0) {
             this.loadGarage((Area) this.cmbArea.getSelectedItem());
         }
-
         this.loadTable();
+
     }
 
     private void loadTable(){
@@ -271,6 +269,7 @@ public class ParkirForm extends JFrame {
             String timeNow = dt.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
             timeField.setText(timeNow);
         }
+        
     }
 
     private void loadArea(){
@@ -354,14 +353,6 @@ public class ParkirForm extends JFrame {
 
     }
 
-    private String getDateTimePickerText(){
-        JTextField dateField = this.dateTimePicker.getDatePicker().getComponentDateTextField();
-        JTextField timeField = this.dateTimePicker.getTimePicker().getComponentTimeTextField();
-
-        String str = dateField.getText() +" "+ timeField.getText().toUpperCase();
-        return str;
-    }
-
     private LocalDateTime getDateTimePickerLocalDateTime(){
         LocalDate dateLocal= dateTimePicker.datePicker.getDate();
         LocalTime timeLocal= dateTimePicker.timePicker.getTime();
@@ -393,23 +384,10 @@ public class ParkirForm extends JFrame {
 
     private String dateFormtoDB(){
 
-//        JTextField dateField = this.dateTimePicker.getDatePicker().getComponentDateTextField();
-//        JTextField timeField = this.dateTimePicker.getTimePicker().getComponentTimeTextField();
-//
-//        String str = dateField.getText() +" "+ timeField.getText().toUpperCase();
-
         LocalDate dateLocal= dateTimePicker.datePicker.getDate();
         LocalTime timeLocal= dateTimePicker.timePicker.getTime();
 
         LocalDateTime dateTime = LocalDateTime.of(dateLocal,timeLocal);
-//
-//        try{
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy h:mma");
-//            dateTime = LocalDateTime.parse(str, formatter);
-//        }catch(Exception e){
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy h:mma");
-//            dateTime = LocalDateTime.parse(str, formatter);
-//        }
 
         String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"));
 

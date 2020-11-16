@@ -14,7 +14,6 @@ public class TransaksiUser {
 
     public TransaksiUser(){};
 
-
     public int getId() {
         return id;
     }

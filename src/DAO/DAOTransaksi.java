@@ -261,10 +261,4 @@ public class DAOTransaksi {
         }
         return lg;
     }
-
-
-
-
-
-
 }
