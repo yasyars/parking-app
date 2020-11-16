@@ -1,5 +1,8 @@
 package Model;
 import javax.swing.table.AbstractTableModel;
+import java.time.DayOfWeek;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.List;
 
 
@@ -19,7 +22,7 @@ public class TableModelTransaksiBulanan extends AbstractTableModel{
     public String getColumnName(int column) {
         switch (column){
             case 0:
-                return "Bulan";
+                return "Minggu";
             case 1:
                 return "Nama Pengguna";
             case 2:
@@ -36,9 +39,13 @@ public class TableModelTransaksiBulanan extends AbstractTableModel{
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
+        WeekFields weekFields = WeekFields.of(DayOfWeek.SUNDAY, 1);
+        // apply weekOfMonth(
+        TemporalField weekOfMonth= weekFields.weekOfMonth();
+
         switch (columnIndex){
             case 0:
-                return listOfTransaksi.get(rowIndex).getStartLocalTime().getMonth();
+                return "Minggu ke-" + listOfTransaksi.get(rowIndex).getStartLocalTime().get(weekOfMonth);
             case 1:
                 return listOfTransaksi.get(rowIndex).getUser();
             case 2:
