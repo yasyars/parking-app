@@ -5,6 +5,8 @@ import Model.*;
 
 import java.awt.*;
 import java.sql.*;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,8 @@ public class DAOTransaksi {
     private final String readQuery = "SELECT * FROM transaksi_parkir";
     private final String getByUserQuery = "SELECT * FROM transaksi_parkir WHERE id_user =?";
     private final String parkQuery = "INSERT INTO transaksi_parkir (id_user,id_area,id_garage, waktu_masuk, waktu_keluar, durasi, total_harga,plat_no) values (?,?,?,?,?,?,?,?)";
-
     private final String getByIdQuery = "SELECT * FROM area_parkir WHERE id_area = ?";
-
+    private final String getinMonthQuery = "SELECT * FROM transaksi_parkir WHERE MONTH(waktu_masuk)= ? AND YEAR(waktu_masuk) = ? AND id_user = ?";
 
     public DAOTransaksi(){};
 
@@ -49,6 +50,46 @@ public class DAOTransaksi {
         }
 
         return listOfTransaksi;
+    }
+
+    public List<Transaksi> getAllinMonth(int month, int year, Customer user) {
+
+        List<Transaksi> lg = new ArrayList<>();
+        PreparedStatement stm = null;
+        DAOArea daoArea = new DAOArea();
+        DAOGarage daoGarage = new DAOGarage();
+        DAOKendaraan daoKendaraan = new DAOKendaraan();
+
+        try {
+            stm = CONN.prepareStatement(getinMonthQuery);
+            stm.setInt(1, month);
+            stm.setInt(2, year);
+            stm.setInt(3, user.getId());
+            stm.execute();
+            ResultSet res = stm.executeQuery();
+
+            while (res.next()) {
+                Transaksi transaksi = new Transaksi();
+                transaksi.setId(res.getInt("id_transaksi"));
+                transaksi.setUser(user);
+                try{
+                    transaksi.setArea(daoArea.getById(res.getInt("id_area")));
+                    transaksi.setGarage(daoGarage.getById(res.getInt("id_garage")));
+                    transaksi.setKendaraan(daoKendaraan.getByPlat(res.getString("plat_no")));
+                    transaksi.setStartTime(res.getString("waktu_masuk"));
+                    transaksi.setEndTime(res.getString("waktu_keluar"));
+                    transaksi.setDuration(res.getInt("durasi"));
+                    transaksi.setTotalTransaction(res.getDouble("total_harga"));
+                    lg.add(transaksi);
+
+                }catch (Exception e){
+                    System.out.println("Error DAOTransaksi: " + e);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error DAOKendaraan 10: " + e.getMessage());
+        }
+        return lg;
     }
 
     public void insert(Transaksi transaksi){

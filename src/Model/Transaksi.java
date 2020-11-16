@@ -13,7 +13,7 @@ public class Transaksi {
     private String endTime;
     private int duration;
     private double totalTransaction;
-    private boolean isFirstinMonth=false;
+    private boolean isFirstinMonth;
 
     public Transaksi(){};
 
@@ -97,6 +97,45 @@ public class Transaksi {
         this.totalTransaction = totalTransaction;
     }
 
+    public int getMonthNumberFromStartTime(){
+        LocalDateTime start = this.getStartLocalTime();
+        String month = start.getMonth().toString().toLowerCase();
+        if (month.equals("january")){
+            return 1;
+        }else if (month.equals("february")){
+            return 2;
+        }else if (month.equals("march")){
+            return 3;
+        }else if (month.equals("april")){
+            return 4;
+        }else if (month.equals("may")){
+            return 5;
+        }else if (month.equals("june")){
+            return 6;
+        }else if (month.equals("july")){
+            return 7;
+        }else if (month.equals("august")){
+            return 8;
+        }else if (month.equals("september")){
+            return 9;
+        }else if (month.equals("october")){
+            return 10;
+        }else if (month.equals("november")){
+            return 11;
+        }else if (month.equals("december")){
+            return 12;
+        }else{
+            return 0;
+        }
+    }
+
+    public int getYearFromStartTime(){
+        LocalDateTime start = this.getStartLocalTime();
+        int year = start.getYear();
+
+        return year;
+    }
+
     public LocalDateTime getStartLocalTime(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime startHour = LocalDateTime.parse(this.getStartTime(), formatter);
@@ -135,8 +174,11 @@ public class Transaksi {
             double monthlySubs = 12000;
             double totalGaragePrice = this.getDuration()* this.kendaraan.getGaragePrice(this.garage);
             if (this.isFirstinMonth){
+                System.out.println("debug: it is first month");
                  this.setTotalTransaction(totalGaragePrice + monthlySubs);
             }else{
+                System.out.println("debug: it is not first month");
+
                 this.setTotalTransaction(totalGaragePrice);
             }
 

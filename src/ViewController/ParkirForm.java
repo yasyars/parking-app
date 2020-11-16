@@ -95,12 +95,6 @@ public class ParkirForm extends JFrame {
 
                 Transaksi tr = new Transaksi();
 
-                if (allTransaksi.size() == 0){
-                    tr.setFirstinMonth(true);
-                }else{
-                    tr.setFirstinMonth(false);
-                }
-
                 if (cmp>0 ){
                     daoParkir.delete(parkir);
 
@@ -109,9 +103,18 @@ public class ParkirForm extends JFrame {
                     tr.setGarage(parkir.getGarage());
                     tr.setKendaraan(parkir.getKendaraan());
                     tr.setStartTime(parkir.getStartTime());
+                    if (daoTransaksi.getAllinMonth(tr.getMonthNumberFromStartTime(),tr.getYearFromStartTime(),user).size() == 0){
+                        tr.setFirstinMonth(true);
+                    }else{
+                        tr.setFirstinMonth(false);
+                    }
                     tr.setUser(user);
                     tr.setCalculateDuration();
                     tr.setCalculateTotalPrice();
+
+                    System.out.println("Debug parkir form: "+daoTransaksi.getAllinMonth(tr.getMonthNumberFromStartTime(),tr.getYearFromStartTime(),user) );
+
+
 
                     daoTransaksi.insert(tr);
                     JOptionPane.showMessageDialog(null,"Riwayat parkir telah disimpan\nWaktu transaksi keluar: " + tr.getEndTime());

@@ -52,7 +52,7 @@ public class RiwayatUser extends JFrame{
 
         add(riwayatUserPanel);
         setTitle("Riwayat Transaksi Pengguna");
-        setSize(500,500);
+        setSize(1200,500);
 
         backButton.addActionListener(new ActionListener() {
             @Override
