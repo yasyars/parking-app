@@ -72,8 +72,11 @@ public class LaporanTransaksiForm extends JFrame{
     public void updateTable(){
         if (cbJenis.getSelectedItem().equals("Semua")){
             showTableAll();
+            updateTitle("Semua");
         }else if (cbJenis.getSelectedItem().equals("Harian")){
             showHarian();
+            updateTitle("Harian");
+
         }else if (cbJenis.getSelectedItem().equals("Mingguan")){
             //
         }else if (cbJenis.getSelectedItem().equals("Bulanan")){
@@ -130,7 +133,9 @@ public class LaporanTransaksiForm extends JFrame{
         if (jenis.equals("Semua")){
             titleLaporan.setText("");
         }else if (jenis.equals("Harian")){
-            //
+            titleLaporan.setText("Hari " +
+                    indoHari(datePicker.getDate().format(DateTimeFormatter.ofPattern("EEEE"))) + ", "+
+                    datePicker.getDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
         }else if (jenis.equals("Mingguan")){
 
         }else if (jenis.equals("Bulanan")){

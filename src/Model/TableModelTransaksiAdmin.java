@@ -25,7 +25,7 @@ public class TableModelTransaksiAdmin extends AbstractTableModel{
             case 2:
                 return "Garage";
             case 3:
-                return "Durasi";
+                return "Durasi (jam)";
             case 4:
                 return "Total Transaksi";
             default:
