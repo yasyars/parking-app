@@ -5,6 +5,7 @@ import Model.*;
 
 import java.awt.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
@@ -17,6 +18,12 @@ public class DAOTransaksi {
     private final String parkQuery = "INSERT INTO transaksi_parkir (id_user,id_area,id_garage, waktu_masuk, waktu_keluar, durasi, total_harga,plat_no) values (?,?,?,?,?,?,?,?)";
     private final String getByIdQuery = "SELECT * FROM area_parkir WHERE id_area = ?";
     private final String getinMonthQuery = "SELECT * FROM transaksi_parkir WHERE MONTH(waktu_masuk)= ? AND YEAR(waktu_masuk) = ? AND id_user = ?";
+    private final String getAllinDateQuery = "SELECT * FROM transaksi_parkir WHERE DATE(waktu_masuk)=? ORDER BY waktu_masuk";
+    private DAOArea daoArea = new DAOArea();
+    private DAOGarage daoGarage = new DAOGarage();
+    private DAOKendaraan daoKendaraan = new DAOKendaraan();
+    private DAOCustomer daoUser = new DAOCustomer();
+
 
     public DAOTransaksi(){};
 
@@ -32,11 +39,8 @@ public class DAOTransaksi {
             while (res.next()){
                 Transaksi transaksi = new Transaksi();
                 try{
-                    DAOCustomer daoUser = new DAOCustomer();
                     transaksi.setUser(daoUser.getById(res.getInt(2)));
-                    DAOArea dArea = new DAOArea();
-                    transaksi.setArea(dArea.getById(res.getInt(3)));
-                    DAOGarage daoGarage = new DAOGarage();
+                    transaksi.setArea(daoArea.getById(res.getInt(3)));
                     transaksi.setGarage(daoGarage.getById(res.getInt(4)));
                     transaksi.setDuration(res.getInt(7));
                     transaksi.setTotalTransaction(res.getInt(8));
@@ -52,13 +56,46 @@ public class DAOTransaksi {
         return listOfTransaksi;
     }
 
+
+    public List<Transaksi> getAllinDate(LocalDate date){
+        List<Transaksi> lg = new ArrayList<>();
+        PreparedStatement stm = null;
+
+        try {
+            stm = CONN.prepareStatement(getAllinDateQuery);
+            stm.setString(1, date.toString());
+            stm.execute();
+            ResultSet res = stm.executeQuery();
+
+            while (res.next()) {
+                Transaksi transaksi = new Transaksi();
+                transaksi.setId(res.getInt("id_transaksi"));
+                transaksi.setUser(daoUser.getById(res.getInt("id_user")));
+                try{
+                    transaksi.setArea(daoArea.getById(res.getInt("id_area")));
+                    transaksi.setGarage(daoGarage.getById(res.getInt("id_garage")));
+                    transaksi.setKendaraan(daoKendaraan.getByPlat(res.getString("plat_no")));
+                    transaksi.setStartTime(res.getString("waktu_masuk"));
+                    transaksi.setEndTime(res.getString("waktu_keluar"));
+                    transaksi.setDuration(res.getInt("durasi"));
+                    transaksi.setTotalTransaction(res.getDouble("total_harga"));
+                    lg.add(transaksi);
+
+                }catch (Exception e){
+                    System.out.println("Error DAOTransaksi getAllinDate: " + e);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error DAOTransaksi  getAllinDate: " + e.getMessage());
+        }
+        return lg;
+
+    }
+
     public List<Transaksi> getAllinMonth(int month, int year, Customer user) {
 
         List<Transaksi> lg = new ArrayList<>();
         PreparedStatement stm = null;
-        DAOArea daoArea = new DAOArea();
-        DAOGarage daoGarage = new DAOGarage();
-        DAOKendaraan daoKendaraan = new DAOKendaraan();
 
         try {
             stm = CONN.prepareStatement(getinMonthQuery);
@@ -121,9 +158,6 @@ public class DAOTransaksi {
     public List<Transaksi> getByUser(Customer user){
         List<Transaksi> lg = new ArrayList<>();
         PreparedStatement stm = null;
-        DAOArea daoArea = new DAOArea();
-        DAOGarage daoGarage = new DAOGarage();
-        DAOKendaraan daoKendaraan = new DAOKendaraan();
 
         try {
             stm = CONN.prepareStatement(getByUserQuery);

@@ -271,13 +271,10 @@ public class ParkirForm extends JFrame {
             String timeNow = dt.format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase();
             timeField.setText(timeNow);
         }
-
-
-
-
     }
 
     private void loadArea(){
+        cmbArea.removeAllItems();
 
         try{
             DAOArea daoArea = new DAOArea();
@@ -291,6 +288,8 @@ public class ParkirForm extends JFrame {
     }
 
     private void loadKendaraan(){
+        cmbKendaraan.removeAllItems();
+
         try{
             DAOKendaraan daoKendaraan = new DAOKendaraan();
             List<Kendaraan> kendaraans =  daoKendaraan.getByUser(this.user);
@@ -307,6 +306,7 @@ public class ParkirForm extends JFrame {
             cmbGarage.removeAllItems();
         }
         try{
+            cmbGarage.removeAllItems();
             DAOGarage daoGarage = new DAOGarage();
             List<Garage> garages =  daoGarage.getByArea(area);
             for (Garage garage: garages){
