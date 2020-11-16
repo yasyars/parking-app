@@ -83,8 +83,8 @@ public class LaporanTransaksiForm extends JFrame{
             showMingguan();
             updateTitle("Mingguan");
         }else if (cbJenis.getSelectedItem().equals("Bulanan")){
-            //
-
+            showBulanan();
+            updateTitle("Bulanan");
         }else if (cbJenis.getSelectedItem().equals("Tahunan")){
             showTahunan();
             updateTitle("Tahunan");
@@ -135,6 +135,16 @@ public class LaporanTransaksiForm extends JFrame{
         showTotal(listOfTransaction);
     }
 
+    public void showBulanan(){
+        LocalDate date = datePicker.getDate();
+        List<Transaksi> listOfTransaction = daoTransaksi.getAllByMonth(date);
+
+        TableModelTransaksiBulanan model = new TableModelTransaksiBulanan(listOfTransaction);
+        TabelTransaksiAdmin.setModel(model);
+
+        showTotal(listOfTransaction);
+    }
+
     public void showTahunan(){
         LocalDate date = datePicker.getDate();
         List<Transaksi> listOfTransaction = daoTransaksi.getAllinYear(date);
@@ -164,7 +174,8 @@ public class LaporanTransaksiForm extends JFrame{
             titleLaporan.setText("Minggu ke-" +datePicker.getDate().get(weekOfMonth) + " Bulan "+
                     datePicker.getDate().getMonth() +" " +  datePicker.getDate().getYear());
         }else if (jenis.equals("Bulanan")){
-
+            titleLaporan.setText(" Bulan "+
+                    datePicker.getDate().getMonth() +" " +  datePicker.getDate().getYear());
         }else if (jenis.equals("Tahunan")){
             titleLaporan.setText("Tahun " + datePicker.getDate().getYear());
         }
