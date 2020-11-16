@@ -9,6 +9,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+import static Helper.Translate.getHariEnglish;
+
 public class OperationalTime {
     private String day;
     private String openHour;
@@ -56,26 +58,6 @@ public class OperationalTime {
         return true;
     }
 
-    public String getHariEnglish(String hari){
-        hari = hari.toLowerCase();
-        if (hari.equals("senin")){
-            return "Monday";
-        }else if (hari.equals("selasa")){
-            return "Tuesday";
-        }else if (hari.equals("rabu")){
-            return "Wednesday";
-        }else if (hari.equals("kamis")){
-            return "Thursday";
-        }else if (hari.equals("jumat")||hari.equals("jum'at")){
-            return "Friday";
-        }else if (hari.equals("sabtu")){
-            return "Saturday";
-        }else if (hari.equals("minggu")){
-            return "Sunday";
-        }else{
-            return null;
-        }
-    }
 
     public LocalTime getOpenHourTime(){
 

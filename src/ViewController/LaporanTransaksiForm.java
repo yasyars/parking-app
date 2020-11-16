@@ -2,9 +2,8 @@ package ViewController;
 
 import DAO.DAOArea;
 import DAO.DAOTransaksi;
-import Model.Area;
-import Model.TableModelTransaksiAdmin;
-import Model.Transaksi;
+import Helper.Translate;
+import Model.*;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
@@ -14,11 +13,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import Helper.Translate.*;
 
 public class LaporanTransaksiForm extends JFrame{
     private JTable TabelTransaksiAdmin;
@@ -76,14 +79,28 @@ public class LaporanTransaksiForm extends JFrame{
         }else if (cbJenis.getSelectedItem().equals("Harian")){
             showHarian();
             updateTitle("Harian");
-
         }else if (cbJenis.getSelectedItem().equals("Mingguan")){
-            //
+            showMingguan();
+            updateTitle("Mingguan");
         }else if (cbJenis.getSelectedItem().equals("Bulanan")){
             //
+
         }else if (cbJenis.getSelectedItem().equals("Tahunan")){
-            //
+            showTahunan();
+            updateTitle("Tahunan");
+
         }
+    }
+
+    public void showTotal(List<Transaksi> listOfTransaksi){
+        labelJumlahTransaksi.setText(String.valueOf(listOfTransaksi.size()));
+
+        double total = 0;
+        for (Transaksi transaksi : listOfTransaksi){
+            total+= transaksi.getTotalTransaction();
+        }
+
+        labelTotal.setText(String.valueOf(total));
     }
 
 
@@ -98,52 +115,6 @@ public class LaporanTransaksiForm extends JFrame{
         this.showTotal(listOfTransaksi);
     }
 
-    public void showTotal(List<Transaksi> listOfTransaksi){
-        labelJumlahTransaksi.setText(String.valueOf(listOfTransaksi.size()));
-
-        double total = 0;
-        for (Transaksi transaksi : listOfTransaksi){
-            total+= transaksi.getTotalTransaction();
-        }
-
-        labelTotal.setText(String.valueOf(total));
-    }
-
-    public String indoHari(String day){
-        day = day.toLowerCase();
-        if (day.equals("monday")){
-            return "Senin";
-        }else if (day.equals("tuesday")){
-            return "Selasa";
-        }else if (day.equals("wednesday")){
-            return "Rabu";
-        }else if (day.equals("thursday")){
-            return "Kamis";
-        }else if (day.equals("friday")){
-            return "Jumat";
-        }else if (day.equals("saturday")){
-            return "Sabtu";
-        }else if (day.equals("sunday")){
-            return "Minggu";
-        }else{
-            return null;
-        }
-    }
-    public void updateTitle(String jenis){
-        if (jenis.equals("Semua")){
-            titleLaporan.setText("");
-        }else if (jenis.equals("Harian")){
-            titleLaporan.setText("Hari " +
-                    indoHari(datePicker.getDate().format(DateTimeFormatter.ofPattern("EEEE"))) + ", "+
-                    datePicker.getDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
-        }else if (jenis.equals("Mingguan")){
-
-        }else if (jenis.equals("Bulanan")){
-
-        }else if (jenis.equals("Tahunan")){
-
-        }
-    }
 
     public void showHarian(){
         LocalDate date = datePicker.getDate();
@@ -152,12 +123,53 @@ public class LaporanTransaksiForm extends JFrame{
         TabelTransaksiAdmin.setModel(model);
 
         showTotal(listOfTransaction);
+    }
 
+    public void showMingguan(){
+        LocalDate date = datePicker.getDate();
+        List<Transaksi> listOfTransaction = daoTransaksi.getAllinWeek(date);
+
+        TableModelTransaksiMingguan model = new TableModelTransaksiMingguan(listOfTransaction);
+        TabelTransaksiAdmin.setModel(model);
+
+        showTotal(listOfTransaction);
+    }
+
+    public void showTahunan(){
+        LocalDate date = datePicker.getDate();
+        List<Transaksi> listOfTransaction = daoTransaksi.getAllinYear(date);
+
+        TableModelTransaksiTahunan model = new TableModelTransaksiTahunan(listOfTransaction);
+        TabelTransaksiAdmin.setModel(model);
+        showTotal(listOfTransaction);
     }
 
     public void initDate(){
         datePicker.setDate(LocalDate.now());
     }
+
+    public void updateTitle(String jenis){
+        WeekFields weekFields = WeekFields.of(DayOfWeek.SUNDAY, 1);
+
+        // apply weekOfMonth()
+        TemporalField weekOfMonth= weekFields.weekOfMonth();
+
+        if (jenis.equals("Semua")){
+            titleLaporan.setText("");
+        }else if (jenis.equals("Harian")){
+            titleLaporan.setText("Hari " +
+                    Translate.getIndoHari(datePicker.getDate().format(DateTimeFormatter.ofPattern("EEEE"))) + ", "+
+                    datePicker.getDate().format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+        }else if (jenis.equals("Mingguan")){
+            titleLaporan.setText("Minggu ke-" +datePicker.getDate().get(weekOfMonth) + " Bulan "+
+                    datePicker.getDate().getMonth() +" " +  datePicker.getDate().getYear());
+        }else if (jenis.equals("Bulanan")){
+
+        }else if (jenis.equals("Tahunan")){
+            titleLaporan.setText("Tahun " + datePicker.getDate().getYear());
+        }
+    }
+
 
 
 }

@@ -19,6 +19,9 @@ public class DAOTransaksi {
     private final String getByIdQuery = "SELECT * FROM area_parkir WHERE id_area = ?";
     private final String getinMonthQuery = "SELECT * FROM transaksi_parkir WHERE MONTH(waktu_masuk)= ? AND YEAR(waktu_masuk) = ? AND id_user = ?";
     private final String getAllinDateQuery = "SELECT * FROM transaksi_parkir WHERE DATE(waktu_masuk)=? ORDER BY waktu_masuk";
+    private final String getByWeekQuery = "SELECT * FROM transaksi_parkir WHERE WEEK(waktu_masuk)=WEEK(?) ORDER BY waktu_masuk";
+    private final String getByYearQuery = "SELECT * FROM transaksi_parkir WHERE YEAR(waktu_masuk)=YEAR(?) ORDER BY waktu_masuk";
+
     private DAOArea daoArea = new DAOArea();
     private DAOGarage daoGarage = new DAOGarage();
     private DAOKendaraan daoKendaraan = new DAOKendaraan();
@@ -63,6 +66,74 @@ public class DAOTransaksi {
 
         try {
             stm = CONN.prepareStatement(getAllinDateQuery);
+            stm.setString(1, date.toString());
+            stm.execute();
+            ResultSet res = stm.executeQuery();
+
+            while (res.next()) {
+                Transaksi transaksi = new Transaksi();
+                transaksi.setId(res.getInt("id_transaksi"));
+                transaksi.setUser(daoUser.getById(res.getInt("id_user")));
+                try{
+                    transaksi.setArea(daoArea.getById(res.getInt("id_area")));
+                    transaksi.setGarage(daoGarage.getById(res.getInt("id_garage")));
+                    transaksi.setKendaraan(daoKendaraan.getByPlat(res.getString("plat_no")));
+                    transaksi.setStartTime(res.getString("waktu_masuk"));
+                    transaksi.setEndTime(res.getString("waktu_keluar"));
+                    transaksi.setDuration(res.getInt("durasi"));
+                    transaksi.setTotalTransaction(res.getDouble("total_harga"));
+                    lg.add(transaksi);
+
+                }catch (Exception e){
+                    System.out.println("Error DAOTransaksi getAllinDate: " + e);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error DAOTransaksi  getAllinDate: " + e.getMessage());
+        }
+        return lg;
+    }
+
+    public List<Transaksi> getAllinWeek(LocalDate date){
+        List<Transaksi> lg = new ArrayList<>();
+        PreparedStatement stm = null;
+
+        try {
+            stm = CONN.prepareStatement(getByWeekQuery);
+            stm.setString(1, date.toString());
+            stm.execute();
+            ResultSet res = stm.executeQuery();
+
+            while (res.next()) {
+                Transaksi transaksi = new Transaksi();
+                transaksi.setId(res.getInt("id_transaksi"));
+                transaksi.setUser(daoUser.getById(res.getInt("id_user")));
+                try{
+                    transaksi.setArea(daoArea.getById(res.getInt("id_area")));
+                    transaksi.setGarage(daoGarage.getById(res.getInt("id_garage")));
+                    transaksi.setKendaraan(daoKendaraan.getByPlat(res.getString("plat_no")));
+                    transaksi.setStartTime(res.getString("waktu_masuk"));
+                    transaksi.setEndTime(res.getString("waktu_keluar"));
+                    transaksi.setDuration(res.getInt("durasi"));
+                    transaksi.setTotalTransaction(res.getDouble("total_harga"));
+                    lg.add(transaksi);
+
+                }catch (Exception e){
+                    System.out.println("Error DAOTransaksi getAllinDate: " + e);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error DAOTransaksi  getAllinDate: " + e.getMessage());
+        }
+        return lg;
+    }
+
+    public List<Transaksi> getAllinYear(LocalDate date){
+        List<Transaksi> lg = new ArrayList<>();
+        PreparedStatement stm = null;
+
+        try {
+            stm = CONN.prepareStatement(getByYearQuery);
             stm.setString(1, date.toString());
             stm.execute();
             ResultSet res = stm.executeQuery();

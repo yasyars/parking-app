@@ -3,6 +3,10 @@ package Model;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
+import Helper.Translate;
+import Helper.Translate.*;
+import Helper.Validasi;
+
 public class Transaksi {
     private int id;
     private Kendaraan kendaraan;
@@ -127,6 +131,13 @@ public class Transaksi {
         }else{
             return 0;
         }
+    }
+
+    public String getNamaHariFromStartTime(){
+        LocalDateTime start = this.getStartLocalTime();
+        String day = start.getDayOfWeek().toString();
+
+        return Translate.getIndoHari(day);
     }
 
     public int getYearFromStartTime(){
