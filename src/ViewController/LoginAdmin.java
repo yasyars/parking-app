@@ -45,11 +45,12 @@ public class LoginAdmin extends JFrame{
                     User user = admin.login(mail, passw);
 
                     if (user.getId() != 0) {
+                        JOptionPane.showMessageDialog(null, " Welcome Administrator");
                         MenuAdminForm ma = new MenuAdminForm();
                         dispose();
                         ma.setVisible(true);
                         ma.setLocationRelativeTo(null);
-                        JOptionPane.showMessageDialog(null, " Welcome Administrator");
+                        
                     }
 
                 }catch(Exception error){

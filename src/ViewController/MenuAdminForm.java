@@ -47,9 +47,14 @@ public class MenuAdminForm extends JFrame{
         keluarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                LoginAdmin login = new LoginAdmin();
-                login.setVisible(true);
+                int response = JOptionPane.showConfirmDialog(null, " Apakah Anda yakin keluar", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if(response ==JOptionPane.YES_OPTION){
+                    dispose();
+                    LoginAdmin login = new LoginAdmin();
+                    login.setVisible(true);
+                    login.setLocationRelativeTo(null);
+                }else if (response == JOptionPane.CLOSED_OPTION){
+                }
             }
         });
     }

@@ -74,10 +74,14 @@ public class MenuUser extends JFrame{
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(null, " Apakah Anda yakin keluar", "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if(response ==JOptionPane.YES_OPTION){
                 dispose();
                 Login login = new Login();
                 login.setVisible(true);
                 login.setLocationRelativeTo(null);
+                }else if (response == JOptionPane.CLOSED_OPTION){
+                }
             }
         });
     }
