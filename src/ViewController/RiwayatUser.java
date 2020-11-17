@@ -2,9 +2,9 @@ package ViewController;
 
 import DAO.DAOKendaraan;
 
+import DAO.DAOTransaksi;
 import Model.*;
 
-import DAO.DAOTransaksiUser;
 import Model.Customer;
 
 import javax.swing.*;
@@ -26,16 +26,10 @@ public class RiwayatUser extends JFrame{
     private JButton backButton;
     private int idUser;
     private Customer user;
-    public int getIdUser() {
-        return idUser;
-    }
+    DAOTransaksi daoTransaksiUser = new DAOTransaksi();
 
-    public void setIdUser(int id_user) {
-        this.idUser = id_user;
-    }
 
     public void showData() {
-        DAOTransaksiUser daoTransaksiUser = new DAOTransaksiUser();
         try {
             TabelModelTransaksiUser model = new TabelModelTransaksiUser(daoTransaksiUser.getByUser(user));
             tabletransaksiuser.setModel(model);
@@ -46,7 +40,6 @@ public class RiwayatUser extends JFrame{
 
     public RiwayatUser(Customer user){
         this.user = user;
-        DAOTransaksiUser daoTransaksiUser = new DAOTransaksiUser();
         //tampilkan_data();
         showData();
 
@@ -63,12 +56,6 @@ public class RiwayatUser extends JFrame{
                 mu.setLocationRelativeTo(null);
             }
         });
-    }
-
-    private void tampilkan_data() {
-        DAOTransaksiUser daoTransaksiUser = new DAOTransaksiUser();
-        TabelModelTransaksiUser model = new TabelModelTransaksiUser(daoTransaksiUser.getAll());
-        tabletransaksiuser.setModel(model);
     }
 
 }

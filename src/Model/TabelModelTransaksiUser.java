@@ -3,9 +3,9 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class TabelModelTransaksiUser extends AbstractTableModel {
-    List<TransaksiUser> listOfTuser;
+    List<Transaksi> listOfTuser;
 
-    public TabelModelTransaksiUser(List<TransaksiUser> listOfTusaer){
+    public TabelModelTransaksiUser(List<Transaksi> listOfTusaer){
         this.listOfTuser = listOfTusaer;
     }
 
