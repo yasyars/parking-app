@@ -52,7 +52,6 @@ public class Mobil implements Kendaraan{
     public boolean isPlatNoValid(String plat_no)//, String tipe)
     {
         String regex = "^[A-Z]{2}\\s[0-9]{4}\\s[A-Z]{1}$";
-        //String motorRegex = "^[A-Z]{2}\\s[0-9]{3}\\s[A-Z]{2}$";
 
         Pattern p = Pattern.compile(regex);
         return p.matcher(plat_no).matches();

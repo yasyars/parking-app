@@ -130,11 +130,9 @@ public class DAOCustomer extends DAOUser{
 
             ps.executeUpdate();
 
-            //JOptionPane.showMessageDialog(null, "Data Berhasil Diubah!");
             ps.close();
 
         } catch (SQLException ex) {
-            //JOptionPane.showMessageDialog(null, ex.getMessage());
 			throw new Exception("Error : " + ex.getMessage());
         }
     }
@@ -171,17 +169,14 @@ public class DAOCustomer extends DAOUser{
                 System.out.println("Error login");
             }
         }catch(HeadlessException| SQLException e){
-            //JOptionPane.showMessageDialog(null,"Error : " + e.getMessage());
 			throw new Exception("Error : " + e.getMessage());
         }finally{
             try{
                 stm.close();
             }catch(SQLException sqle){
-                //System.out.println("Error : "+sqle.getMessage());
+                System.out.println("Error : "+sqle.getMessage());
             }
         }
-//        System.out.println("Debug : " +
-//                user.getId() + user.getPassword());
         return user;
     }
 

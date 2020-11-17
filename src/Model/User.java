@@ -63,13 +63,6 @@ public class User {
 
     public void setPassword(String hashedPassword){
         this.password = hashedPassword;
-
-    }
-
-    public void setPassword(char[] rawPassword) {
-
-        String pass = md5Spring(String.valueOf(rawPassword));
-        this.password = pass;
     }
 
     public int isAdmin() {
@@ -100,8 +93,6 @@ public class User {
 
     public static boolean isPasswordValid(String password){
         boolean isValid = true;
-        String validasiLabel ="";
-        String passLabel ="";
         String upperCaseChars = "(.*[A-Z].*)";
         String lowerCaseChars = "(.*[a-z].*)";
         String numbers = "(.*[0-9].*)";

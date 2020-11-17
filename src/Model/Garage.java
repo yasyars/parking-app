@@ -7,7 +7,6 @@ public class Garage {
     private OperationalTime operationalTime;
     private double tarifMotor;
     private double tarifMobil;
-//    private int isOccupied;
 
     public Garage(){};
 
@@ -77,11 +76,4 @@ public class Garage {
         return "ID: "+ this.getId() + ", " + this.getName();
     }
 
-//    public int getIsOccupied() {
-//        return isOccupied;
-//    }
-//
-//    public void setIsOccupied(int isOccupied) {
-//        this.isOccupied = isOccupied;
-//    }
 }

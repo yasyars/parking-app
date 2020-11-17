@@ -30,9 +30,6 @@ public class DAOUser {
     public void setIsAdmin(int admin){
         this.isAdmin = admin;
     }
-    public int getIsAdmin(){
-        return isAdmin;
-    }
 
     public User get(int id) throws Exception{
         User user = null;
@@ -120,11 +117,9 @@ public class DAOUser {
             try{
                 stm.close();
             }catch(SQLException sqle){
-                //System.out.println("Error : "+sqle.getMessage());
+//                System.out.println("Error : "+sqle.getMessage());
             }
         }
-//        System.out.println("Debug : " +
-//        user.getId() + user.getPassword());
         return user;
     }
 
