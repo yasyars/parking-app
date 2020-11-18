@@ -28,7 +28,7 @@ public class TabelModelTransaksiUser extends AbstractTableModel {
             case 3:
                 return "Waktu Selesai";
             case 4:
-                return "Durasi";
+                return "Durasi (jam)";
             case 5:
                 return "Total Transaksi";
 

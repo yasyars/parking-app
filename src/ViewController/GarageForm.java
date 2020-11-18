@@ -192,7 +192,7 @@ public class GarageForm extends JFrame{
                     kosongkan_form();
 
                 }catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex);
+                    JOptionPane.showMessageDialog(null, "Garage tidak dapat dihapus!");
                 }
                 tampilkan_data();
             }

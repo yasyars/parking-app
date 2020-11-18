@@ -38,6 +38,7 @@ public class DAOArea {
                 throw new Exception("Error : " + error.getMessage());
             }
         }catch(HeadlessException| SQLException e){
+
             throw new Exception("Error : " + e.getMessage());
         }finally{
             try{
@@ -116,7 +117,9 @@ public class DAOArea {
             stm.setInt(1, id);
             stm.execute();
         }catch (HeadlessException | SQLException e){
-            throw new Exception("Error: "+ e.getMessage());
+            System.out.print("Error: "+ e.getMessage());
+
+            throw new Exception("Cannot delete area!");
 
         }finally {
             try {

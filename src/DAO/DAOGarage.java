@@ -117,7 +117,7 @@ public class DAOGarage {
         }
     };
 
-    public void update(Garage garage){
+    public void update(Garage garage) throws Exception{
         PreparedStatement stm = null;
         try{
             stm = CONN.prepareStatement(updateQuery);
@@ -134,6 +134,8 @@ public class DAOGarage {
 
         }catch (HeadlessException | SQLException e){
             System.out.println("Error : " + e.getMessage());
+            throw new Exception("Cannot update garage!");
+
         }finally {
             try {
                 stm.close();
@@ -142,7 +144,7 @@ public class DAOGarage {
             }
         }
     };
-    public void delete(int id){
+    public void delete(int id) throws Exception{
         PreparedStatement stm = null;
         try{
             stm = CONN.prepareStatement(deleteQuery);
@@ -151,6 +153,8 @@ public class DAOGarage {
 
         }catch (HeadlessException | SQLException e){
             System.out.println("Error : " +e.getMessage());
+            throw new Exception("Cannot delete garage!");
+
         }finally {
             try{
                 stm.close();
