@@ -175,7 +175,7 @@ public class Transaksi {
     }
 
     public void setCalculateTotalPrice(){
-        if (user.getSubscription().equals("Easy")){
+        if (user.getSubscription().equals("Easy")||user.getSubscription().equals("easy")){
             double costSubs = 2000;
             double totalGaragePrice = this.getDuration() * this.kendaraan.getGaragePrice(this.garage);
             System.out.println("getduration: "+this.getDuration() );
@@ -189,7 +189,6 @@ public class Transaksi {
                  this.setTotalTransaction(totalGaragePrice + monthlySubs);
             }else{
                 System.out.println("debug: it is not first month");
-
                 this.setTotalTransaction(totalGaragePrice);
             }
 
