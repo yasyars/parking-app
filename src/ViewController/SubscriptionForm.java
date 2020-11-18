@@ -40,7 +40,7 @@ public class SubscriptionForm extends JFrame {
         easyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setSubscription("easy");
+                user.setSubscription("Easy");
                 try{
                     daoUser.insert(user);
                     JOptionPane.showMessageDialog(null, "Pilihan Subscription: Easy \nRegistrasi Berhasil!");
@@ -57,7 +57,7 @@ public class SubscriptionForm extends JFrame {
         plusButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setSubscription("plus");
+                user.setSubscription("Plus");
                 try {
                     daoUser.insert(user);
                     JOptionPane.showMessageDialog(null, "Pilihan Subscription: Plus\nRegistrasi Berhasil!");
