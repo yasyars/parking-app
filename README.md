@@ -3,7 +3,7 @@
 - Open it with IntelliJIDEA
 - Run main class
 
-## Laporan:
+## Dokumentasi / Laporan:
 https://docs.google.com/document/d/1FKu7r4Jn9W_S8Fp-dQCt4yhPsID3ESVg3TlhI25FxI4/edit?usp=sharing
 
 ## Created by:
